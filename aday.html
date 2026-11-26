@@ -736,8 +736,8 @@ var SEL=null,TAB='sum',LIST=[];
   .catch(function(){busy=false;updGo();$('jres').innerHTML='';say('m-js','network')})}
  $('jq').addEventListener('input',updGo);
  $('jgo').addEventListener('click',doSearch);
- function syncW(){var c=$('jcareer'),g=$('jgo');if(c&&g){var w=c.offsetWidth;if(w>0)g.style.width=w+'px'}}
- try{new ResizeObserver(syncW).observe($('jcareer'))}catch(e){}window.addEventListener('resize',syncW);
+ function syncW(){var c=$('jcareer'),g=$('jgo'),q=$('jq'),m=$('sum');if(c&&g){var w=c.offsetWidth;if(w>0)g.style.width=w+'px'}if(q&&m&&q.offsetWidth>0){m.style.width=q.offsetWidth+'px'}}
+ try{var ro=new ResizeObserver(syncW);ro.observe($('jcareer'));ro.observe($('jq'))}catch(e){}window.addEventListener('resize',syncW);
  $('roles').addEventListener('click',function(e){var t=e.target.closest('button[data-r]');if(!t)return;t.disabled=true;
   rpc('set_my_match',{p_role:t.getAttribute('data-r'),p_status:t.getAttribute('data-s')}).then(function(x){if(x.ok){say('m-roles','saved',true);loadRoles()}else{t.disabled=false;say('m-roles','generic')}})});
  function loadQuestions(){
