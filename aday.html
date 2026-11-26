@@ -731,7 +731,7 @@ var SEL=null,TAB='sum',LIST=[];
    if(x.status===402){$('jres').innerHTML='';freeLeft=0;updGo();return}
    if(x.status===429){$('jres').innerHTML='';say('m-js','daily_limit');updGo();return}
    if(!x.ok){$('jres').innerHTML='';say('m-js','generic');updGo();return}
-   lastQ=q;updGo();JOBS=x.j.jobs||[];EXTRA=x.j.extra||[];SQ=q;$('mf').hidden=!(JOBS.length||EXTRA.length);drawJobs()})
+   lastQ=q;updGo();JOBS=x.j.jobs||[];EXTRA=x.j.extra||[];SQ=q;$('mf').hidden=!(JOBS.length||EXTRA.length);drawJobs();try{var t=($('mf').hidden?$('jres'):$('mf'));t.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}})
   .catch(function(){busy=false;updGo();$('jres').innerHTML='';say('m-js','network')})}
  $('jq').addEventListener('input',updGo);
  $('jgo').addEventListener('click',doSearch);
