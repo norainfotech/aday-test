@@ -636,7 +636,9 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
  function aiBadge(m,j){return READY[(m==='career'?'00000000-0000-0000-0000-000000000000':j)+'|'+cmode(m)]?' ✓':(aiLeft==null?'':' ('+aiLeft+')')}
  function showLeft(){document.querySelectorAll('.ai-n').forEach(function(x){x.textContent=aiBadge(x.getAttribute('data-m'),x.getAttribute('data-j'))})}
  function loadReady(){rpc('my_ai_ready').then(function(x){if(x.ok&&Array.isArray(x.j)){x.j.forEach(function(k){READY[k]=1});showLeft()}})}
+ function premAI(){return '<div class="prem" style="margin:0"><span class="pb">'+b('Yakında','Coming soon')+'</span><b>'+b('Bugünkü yapay zekâ hakkınız doldu','You have used today’s AI allowance')+'</b><p>'+b('Yarın yeniden 3 hakkınız olur. Sınırsız kullanım için Premium paket çok yakında burada.','You get 3 more tomorrow. Unlimited use: the Premium plan is coming soon.')+'</p></div>'}
  function runAI(mode,jid,out,btn){
+  if(aiLeft===0&&!READY[(mode==='career'?'00000000-0000-0000-0000-000000000000':jid)+'|'+cmode(mode)]){out.hidden=false;out.innerHTML=premAI();return}
   var old=btn.innerHTML;btn.disabled=true;btn.innerHTML=b('Hazırlanıyor… (~10 sn)','Working… (~10 s)');
   out.hidden=false;out.innerHTML='<span class="ph">'+b('Yapay zekâ çalışıyor, lütfen bekleyin…','AI is working, please wait…')+'</span>';
   try{out.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
@@ -644,7 +646,7 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
   ensure().then(function(){return fetch(SB+'/functions/v1/analyze-job',{method:'POST',headers:hdr(),body:JSON.stringify({mode:mode,job_id:jid,lang:L()?'en':'tr'})})})
   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,j:j}})})
   .then(function(x){done();
-   if(!x.ok){out.textContent=tx((x.j&&x.j.error)||'generic');return}
+   if(!x.ok){if(x.j&&x.j.error==='daily_limit'){aiLeft=0;showLeft();out.innerHTML=premAI();return}out.textContent=tx((x.j&&x.j.error)||'generic');return}
    if(aiLeft!=null&&!x.j.cached){aiLeft=Math.max(0,aiLeft-1)}READY[(mode==='career'?'00000000-0000-0000-0000-000000000000':jid)+'|'+cmode(mode)]=1;showLeft()
    out.innerHTML='<div class="ai-h"><span>'+b('Yapay zekâ taslağıdır; kullanmadan önce kontrol edin.','AI draft; please review before using.')+'</span><button type="button" class="btn2 sm cp">'+b('Kopyala','Copy')+'</button></div>';
    out.appendChild(document.createTextNode(x.j.text));
