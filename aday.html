@@ -225,7 +225,7 @@ details.acct .in{padding-top:18px}
 .lrow label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:#5B6778;font-weight:500}
 .lrow select{padding:9px 8px;font-size:14px;min-width:76px}.lrow select.lg{min-width:122px}.lrow #lang-add{white-space:nowrap;margin:0 0 1px auto}
 .lrow .rm{width:38px;height:38px;border:0;background:none;color:#8590A2;font-size:22px;cursor:pointer;border-radius:50%}.lrow .rm:hover{background:#F3F5F8;color:#B3261E}
-.tf{display:contents}.tf em{font-style:normal;font-size:14px;color:#5B6778;margin:0 2px 0 10px;align-self:center}
+.q.tv>.qt{flex-basis:300px}.tf{flex:0 0 100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:2px}.tf[hidden]{display:none}.tf em{font-style:normal;font-size:14px;color:#5B6778;margin:0 4px 0 0}.tf .ch input:checked+span{background:#EEF3FB;border-color:#153A72;color:#153A72}@media(max-width:640px){.q.tv>.qt{flex-basis:100%}}
 .pt [hidden]{display:none!important}
 @media (max-width:960px){.pt{padding:0 20px 48px}.pp{padding:24px 20px}.g2{grid-template-columns:1fr}.pp h2{font-size:24px}.st-s{display:none}.st-l{font-size:13px}.dz{padding:26px 16px}}
 </style>
@@ -306,14 +306,14 @@ details.acct .in{padding-top:18px}
 <p class="hint"><span class="tr">İsteğe bağlı; yalnızca eşleştirmede kullanılır.</span><span class="en">Optional; used for matching only.</span></p></div>
 <div class="q" role="group"><div class="qt"><span class="tr">Dil bilgisi</span><span class="en">Languages</span></div><div id="langs"></div>
 <button type="button" class="btn2 sm" id="lang-add" style="margin-bottom:1px"><span class="tr">+ Dil ekle</span><span class="en">+ Add language</span></button></div>
-<div class="q" role="group"><div class="qt"><span class="tr">Yurt içi seyahat edebilir misiniz?</span><span class="en">Can you travel within your country?</span></div><div class="chs">
+<div class="q tv" role="group"><div class="qt"><span class="tr">Yurt içi seyahat edebilir misiniz?</span><span class="en">Can you travel within your country?</span></div><div class="chs">
 <label class="ch"><input type="radio" name="tdom" value="yes"><span><span class="tr">Evet</span><span class="en">Yes</span></span></label>
 <label class="ch"><input type="radio" name="tdom" value="no"><span><span class="tr">Hayır</span><span class="en">No</span></span></label>
 <span class="tf" id="tf-dom" hidden><em><span class="tr">Ne sıklıkla?</span><span class="en">How often?</span></em>
 <label class="ch"><input type="radio" name="tfdom" value="week_days"><span><span class="tr">Haftada birkaç gün</span><span class="en">A few days a week</span></span></label>
 <label class="ch"><input type="radio" name="tfdom" value="month_days"><span><span class="tr">Ayda birkaç gün</span><span class="en">A few days a month</span></span></label>
 <label class="ch"><input type="radio" name="tfdom" value="urgent"><span><span class="tr">Yalnızca acil durumlarda</span><span class="en">Only in urgent cases</span></span></label></span></div></div>
-<div class="q" role="group"><div class="qt"><span class="tr">Yurt dışı seyahat edebilir misiniz?</span><span class="en">Can you travel abroad?</span></div><div class="chs">
+<div class="q tv" role="group"><div class="qt"><span class="tr">Yurt dışı seyahat edebilir misiniz?</span><span class="en">Can you travel abroad?</span></div><div class="chs">
 <label class="ch"><input type="radio" name="tint" value="yes"><span><span class="tr">Evet</span><span class="en">Yes</span></span></label>
 <label class="ch"><input type="radio" name="tint" value="no"><span><span class="tr">Hayır</span><span class="en">No</span></span></label>
 <span class="tf" id="tf-int" hidden><em><span class="tr">Ne sıklıkla?</span><span class="en">How often?</span></em>
