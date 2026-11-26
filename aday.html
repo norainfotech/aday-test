@@ -185,7 +185,7 @@ body:has(#p-app:not([hidden])) .head{display:none}
 .acts{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.row-a{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:10px}
 .msg{margin:12px 0 0;font-size:15px;min-height:22px;color:#B3261E}.msg.ok{color:#1B6E3A}
 .sum{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#F7F9FC;border:1px solid #E6E9EE;border-radius:14px;padding:14px 18px;margin:0 0 22px;font-size:14px;color:#3D4859}
-.sum a{color:#153A72;font-weight:600;cursor:pointer;text-decoration:underline}
+.sum a{color:#153A72;font-weight:600;cursor:pointer;text-decoration:underline}.sum a.sum-cv{display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:#fff;border:1px solid #DDE3EC;border-radius:999px;padding:5px 12px;max-width:260px}.sum a.sum-cv:hover{border-color:#153A72}.sum a.sum-cv span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sum a.sum-cv[hidden]{display:none}#sum-t{flex:1}
 .jsearch{margin:0 0 26px;padding:0 0 22px;border-bottom:1px solid #E6E9EE}
 .jrow{display:flex;gap:10px;flex-wrap:wrap}.jrow input{flex:1;min-width:220px;padding:13px 14px;border:1px solid #DDE3EC;border-radius:10px;font:inherit;font-size:16px}.jrow .btn{border:0;cursor:pointer;font-family:inherit}.jrow .btn[disabled]{opacity:.45;cursor:default}.prem{margin:14px 0;padding:18px 20px;border-radius:14px;background:linear-gradient(135deg,#0F2A52,#153A72 60%,#2B5BA8);color:#fff;box-shadow:0 8px 24px rgba(21,58,114,.25)}.prem[hidden]{display:none}.prem b{display:block;font-size:17px;margin:8px 0 4px}.prem p{margin:0;opacity:.85;font-size:14px}.prem .pb{display:inline-block;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.18);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
 .jb{border:1px solid #E6E9EE;border-radius:14px;padding:18px 20px;margin:12px 0 0;background:#fff}.jb h4{margin:0 0 4px;font-size:18px}.jb .meta{margin:0 0 10px;color:#5B6778;font-size:14px}
@@ -333,7 +333,7 @@ details.acct .in{padding-top:18px}
 
 <section class="pp" id="s3" hidden aria-labelledby="h3s">
 <h2 id="h3s"><span class="tr">Size uygun ilanlar</span><span class="en">Roles suited to you</span></h2>
-<div class="sum" id="sum" hidden><span id="sum-t"></span><a id="sum-e"><span class="tr">Tercihleri düzenle</span><span class="en">Edit preferences</span></a></div>
+<div class="sum" id="sum" hidden><a class="sum-cv" id="sum-cv" hidden title="CV"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><span id="sum-cvn"></span></a><span id="sum-t"></span><a id="sum-e"><span class="tr">Tercihleri düzenle</span><span class="en">Edit preferences</span></a></div>
 <div class="note-ok" id="reconsent" hidden><span><span class="tr">Rıza metni güncellendi: onaylı işverenler sizi önce ad/iletişim olmadan görür; ad ve iletişim bilgileriniz yalnızca Nora'nın seçtiği onaylı işverenlere açılır. Kabul etmezseniz işverenler sizi göremez.</span><span class="en">Consent text updated: approved employers first see you without name/contact; your name and contact details are disclosed only to approved employers selected by Nora. Without acceptance, employers cannot see you.</span> <a href="privacy.html#cv-havuzu"><span class="tr">Aydınlatma metni</span><span class="en">Privacy notice</span></a></span><button type="button" class="btn2" id="reconsent-go"><span class="tr">Kabul ediyorum</span><span class="en">I accept</span></button></div>
 <div class="jsearch"><h3 style="margin:0 0 6px;font-size:20px"><span class="tr">İlan ara</span><span class="en">Search roles</span></h3>
 
@@ -465,7 +465,7 @@ details.acct .in{padding-top:18px}
   .catch(function(){$('p-load').hidden=true;$('p-app').hidden=false;say('m-up','network')})}
  function loadFiles(){return get('candidate_files?select=original_name,uploaded_at,is_current&order=uploaded_at.desc').then(function(x){
   var cur=x.ok&&(x.j||[]).filter(function(f){return f.is_current})[0];cvInfo=cur||null;
-  if(cur){$('cvname').textContent=cur.original_name;$('cvdate').textContent=dt(cur.uploaded_at)}})}
+  if(cur){$('cvname').textContent=cur.original_name;$('cvdate').textContent=dt(cur.uploaded_at);$('sum-cvn').textContent=cur.original_name;$('sum-cv').hidden=false}else{$('sum-cv').hidden=true}})}
 
  // ---- 1. adım: profil
  var FIELDS=['full_name','phone','country','headline','years_experience'];
@@ -602,7 +602,7 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
   if(Array.isArray(p.countries)&&p.countries.length)parts.push(p.countries.map(function(c){return nm(CTRY,c)}).join(', '));
   if(AV[p.availability])parts.push(b(AV[p.availability][0],AV[p.availability][1]));
   $('sum-t').innerHTML='<strong>'+b('Tercihleriniz','Your preferences')+':</strong> '+parts.join(' · ');$('sum').hidden=false}
- $('sum-e').addEventListener('click',function(){go(2)});
+ $('sum-e').addEventListener('click',function(){go(2)});$('sum-cv').addEventListener('click',function(){go(1)});
  var EMPTY='<div class="empty"><div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div><h3>'+b('Şu an size önerilen ilan yok','No roles suggested right now')+'</h3><p>'+b('Bilgilerinizi ve tercihlerinizi aldık. Size uygun bir ilan çıktığında burada görünecek.','We have your details and preferences. When a suitable role appears, it will show up here.')+'</p></div>';
  function loadCreq(){$('reconsent').hidden=!(cand&&cand.consent_version!=='2026-11-v5')}
  $('reconsent-go').addEventListener('click',function(){rpc('accept_new_consent').then(function(x){if(x.ok){cand.consent_version='2026-11-v5';loadCreq()}})});
