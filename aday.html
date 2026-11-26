@@ -684,6 +684,22 @@ var SEL=null,TAB='det',LIST=[];
   pn.className='jp';pn.innerHTML='';pn.appendChild(PANES[key])}
  var HEAD=/^(about( the)?( role| us| you)?|responsibilities|key responsibilities|requirements|qualifications|what you('| wi)ll (do|bring)|what we offer|nice to have|benefits|skills|job description|your role|who you are|we offer|sorumluluklar|aranan nitelikler|nitelikler|gereksinimler|iş tanımı|pozisyon hakkında|sunduklarımız|aufgaben|anforderungen|dein profil|ihr profil|wir bieten|to start,? you need|projects you(?:'|’)d join|what you(?:'|’)ll need|what you bring|who we(?:'|’)re looking for|why join us|what we(?:'|’)re looking for|your profile|your tasks|your responsibilities|ihre aufgaben|ihre qualifikationen|das bieten wir|unser angebot|vos missions|votre profil|ce que nous offrons)\s*:?$/i;var HEADIN=/\s*\b(To start,? you need|Projects you(?:'|’)d join|What you(?:'|’)ll need|What you bring|Who we(?:'|’)re looking for|Why join us|What we(?:'|’)re looking for|Your profile|Your tasks|Your responsibilities|Ihre Aufgaben|Ihre Qualifikationen|Das bieten wir|Unser Angebot|Votre profil|Vos missions)\b\s*:?\s*/g;
  function fmtDesc(t){
+  var raw=String(t).replace(/\r/g,'').replace(/[ \t]+/g,' ');var rl=raw.split('\n').map(function(x){return x.trim()});
+  if(rl.filter(function(x){return x}).length>=4&&raw.indexOf('\n')>-1){
+   var o=[],par=[],lst=false;
+   function fl(){if(par.length){o.push('<p>'+esc(par.join(' '))+'</p>');par=[]}}
+   function cl(){if(lst){o.push('</ul>');lst=false}}
+   for(var i=0;i<rl.length;i++){var l=rl[i];
+    if(!l){fl();cl();continue}
+    if(/^#\S+$/.test(l))continue;
+    var m=l.match(/^[•·●▪■◦*–-]\s+(.*)$/);
+    if(m){fl();if(!lst){o.push('<ul>');lst=true}o.push('<li>'+esc(m[1])+'</li>');continue}
+    cl();
+    var nx=''; for(var k=i+1;k<rl.length;k++){if(rl[k]){nx=rl[k];break}}
+    var first=(i===0||!rl[i-1]);
+    if(first&&nx&&l.length<=70&&!/[.!?,;]$/.test(l)&&l.split(' ').length<=9){fl();o.push('<h5>'+esc(l.replace(/:$/,''))+'</h5>');continue}
+    par.push(l)}
+   fl();cl();return o.join('')}
   t=String(t).replace(/\s+/g,' ').trim();if(!t)return '<span class="ph">'+b('İlan metni yok.','No description.')+'</span>';
   t=t.replace(/\s*[•·●▪■◦]\s*/g,'\n• ').replace(/\s+-\s+(?=[A-ZÇĞİÖŞÜ])/g,'\n• ');
   t=t.replace(/((?:About(?: the)?(?: Role| Us| You)?|Key Responsibilities|Responsibilities|Requirements|Qualifications|What You(?:'|’)ll (?:Do|Bring)|What We Offer|Nice to Have|Benefits|Job Description|Sorumluluklar|Aranan Nitelikler|Nitelikler|Gereksinimler|İş Tanımı|Pozisyon Hakkında|Sunduklarımız|Aufgaben|Anforderungen|Wir bieten))\s*:/g,'\n\n$1:\n');
