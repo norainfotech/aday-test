@@ -185,7 +185,7 @@ footer span{display:flex;flex-wrap:wrap;gap:24px}
 .sum{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#F7F9FC;border:1px solid #E6E9EE;border-radius:14px;padding:14px 18px;margin:0 0 22px;font-size:14px;color:#3D4859}
 .sum a{color:#153A72;font-weight:600;cursor:pointer;text-decoration:underline}
 .jsearch{margin:0 0 26px;padding:0 0 22px;border-bottom:1px solid #E6E9EE}
-.jrow{display:flex;gap:10px;flex-wrap:wrap}.jrow input{flex:1;min-width:220px;padding:13px 14px;border:1px solid #DDE3EC;border-radius:10px;font:inherit;font-size:16px}.jrow .btn{border:0;cursor:pointer;font-family:inherit}.jrow .btn[disabled]{opacity:.6}
+.jrow{display:flex;gap:10px;flex-wrap:wrap}.jrow input{flex:1;min-width:220px;padding:13px 14px;border:1px solid #DDE3EC;border-radius:10px;font:inherit;font-size:16px}.jrow .btn{border:0;cursor:pointer;font-family:inherit}.jrow .btn[disabled]{opacity:.45;cursor:default}.prem{margin:14px 0;padding:18px 20px;border-radius:14px;background:linear-gradient(135deg,#0F2A52,#153A72 60%,#2B5BA8);color:#fff;box-shadow:0 8px 24px rgba(21,58,114,.25)}.prem[hidden]{display:none}.prem b{display:block;font-size:17px;margin:8px 0 4px}.prem p{margin:0;opacity:.85;font-size:14px}.prem .pb{display:inline-block;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.18);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
 .jb{border:1px solid #E6E9EE;border-radius:14px;padding:18px 20px;margin:12px 0 0;background:#fff}.jb h4{margin:0 0 4px;font-size:18px}.jb .meta{margin:0 0 10px;color:#5B6778;font-size:14px}
 .aibtns{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 0}.aibtns .btn2{padding:9px 16px;font-size:14px}
 .mf{margin:16px 0 4px;padding:16px 18px;border:1px solid #E6E9EE;border-radius:16px;background:linear-gradient(180deg,#fff,#F7F9FC)}.mf-h{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}.mf-t{font-weight:600;font-size:14px;color:#0E1B2E}.mf-v{font-weight:700;font-size:14px;color:#153A72;background:#EEF3FB;border-radius:999px;padding:3px 12px}.mf-n{margin:10px 0 0;font-size:13px;color:#5B6778}
@@ -332,7 +332,7 @@ details.acct .in{padding-top:18px}
 <div class="note-ok" id="reconsent" hidden><span><span class="tr">Rıza metni güncellendi: onaylı işverenler sizi önce ad/iletişim olmadan görür; ad ve iletişim bilgileriniz yalnızca Nora'nın seçtiği onaylı işverenlere açılır. Kabul etmezseniz işverenler sizi göremez.</span><span class="en">Consent text updated: approved employers first see you without name/contact; your name and contact details are disclosed only to approved employers selected by Nora. Without acceptance, employers cannot see you.</span> <a href="privacy.html#cv-havuzu"><span class="tr">Aydınlatma metni</span><span class="en">Privacy notice</span></a></span><button type="button" class="btn2" id="reconsent-go"><span class="tr">Kabul ediyorum</span><span class="en">I accept</span></button></div>
 <div class="jsearch"><h3 style="margin:0 0 6px;font-size:20px"><span class="tr">İlan ara</span><span class="en">Search roles</span></h3>
 <p class="ph"><span class="tr">Yapay zekâ analizi, ön yazı ve CV önerisi: günde 5 hak.</span><span class="en">AI analysis, cover letter and CV tips: 5 uses a day.</span><span id="aileft"></span></p>
-<div class="jrow"><input id="jq" maxlength="80" aria-label="Search" data-ph-tr="Boş bırakırsanız profilinizden aranır" data-ph-en="Leave empty to search from your profile" placeholder="Boş bırakırsanız profilinizden aranır"><button type="button" class="btn" id="jgo"><span class="tr">Ara</span><span class="en">Search</span></button><button type="button" class="btn2" id="jcareer"><span class="tr">Kariyer önerisi</span><span class="en">Career suggestions</span></button></div><div class="aiout" id="aicareer" hidden></div>
+<div class="jrow"><input id="jq" maxlength="80" aria-label="Search" data-ph-tr="Boş bırakırsanız profilinizden aranır" data-ph-en="Leave empty to search from your profile" placeholder="Boş bırakırsanız profilinizden aranır"><button type="button" class="btn" id="jgo"><span class="tr">Ara</span><span class="en">Search</span></button><button type="button" class="btn2" id="jcareer"><span class="tr">Kariyer önerisi</span><span class="en">Career suggestions</span></button></div><div class="aiout" id="aicareer" hidden></div><div class="prem" id="prem" hidden><span class="pb"><span class="tr">Yakında</span><span class="en">Coming soon</span></span><b><span class="tr">Arama hakkınız doldu</span><span class="en">You have used your searches</span></b><p><span class="tr">Sınırsız arama ve daha fazlası için Premium paket çok yakında burada.</span><span class="en">Unlimited searches and more: the Premium plan is coming soon.</span></p></div>
 <div class="mf" id="mf" hidden><div class="mf-h"><span class="mf-t"><span class="tr">Uyum aralığı</span><span class="en">Match range</span></span><span class="mf-v" id="mf-v"></span></div><div class="rng"><div class="rng-tr"></div><div class="rng-fill" id="rng-fill"></div><input type="range" id="mf-min" min="0" max="100" step="5" value="0" aria-label="Min"><input type="range" id="mf-max" min="0" max="100" step="5" value="100" aria-label="Max"></div><div class="mf-n" id="mf-n"></div></div>
 <p class="msg" id="m-js" role="status" aria-live="polite"></p><div id="jres"></div></div>
 <div id="roles"></div><p class="msg" id="m-roles" role="status" aria-live="polite"></p>
@@ -436,7 +436,7 @@ details.acct .in{padding-top:18px}
   $('dz').hidden=!!(cand&&cvInfo);
   $('ckrow').hidden=!!(cand&&cvInfo&&!pending&&!replacing);
   if(replacing){$('dz').hidden=false;$('ckrow').hidden=false}
-  if(step===3){loadRoles();if(!autoS){autoS=true;setTimeout(doSearch,50)}}
+  if(step===3){loadRoles();if(!autoS){autoS=true;setTimeout(function(){doSearch(true)},50)}}
   if(step===4)renderProfile();
  }
  var cvInfo=null,replacing=false;
@@ -622,7 +622,8 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
  function srcName(j){var M={outsourcing:'Nora Outsourcing',arbeitnow:'Arbeitnow',bundesagentur:'Bundesagentur',linkedin:'LinkedIn',kariyer:'Kariyer.net',freelancermap:'Freelancermap',jooble:'Jooble',adzuna:'Adzuna',careerjet:'Careerjet',jsearch:'Google Jobs'};return M[j.source]||'İlan'}
  function chipsK(a){return a.length?a.map(function(x){return '<span class="k">'+esc(x)+'</span>'}).join(''):'<span class="ph">–</span>'}
  function srcName2(){return ''}
- var aiLeft=null,autoS=false;
+ var aiLeft=null,autoS=false,freeLeft=null,lastQ='',busy=false;
+ function updGo(){var btn=$('jgo');btn.disabled=busy||freeLeft===0||(freeLeft!=null&&$('jq').value.trim()===lastQ);if(!busy)btn.innerHTML=b('Ara','Search')+(freeLeft!=null?' ('+freeLeft+')':'');$('prem').hidden=freeLeft!==0}
  function showLeft(){var el=$('aileft');if(el)el.innerHTML=aiLeft==null?'':' · '+b('Kalan hak: ','Left today: ')+aiLeft+'/5'}
  function runAI(mode,jid,out,btn){
   var old=btn.innerHTML;btn.disabled=true;btn.innerHTML=b('Hazırlanıyor… (~10 sn)','Working… (~10 s)');
@@ -660,16 +661,19 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
     '<div class="cmp"><div class="g"><b>'+b('Güçlü yönleriniz','Your strengths')+'</b>'+chipsK(j.strengths||[])+'</div><div class="w"><b>'+b('Eksik / geliştirilebilir','Gaps')+'</b>'+chipsK(j.gaps||[])+'</div></div>'+
     (j.apply_url?'<a class="btn2" target="_blank" rel="noopener noreferrer" href="'+esc(j.apply_url)+'">'+b('İlana git','Open posting')+'</a>':'')+'<div class="aibtns" data-j="'+esc(j.id)+'"><button type="button" class="btn2" data-ai="compare">'+b('Yapay zekâ analizi','AI analysis')+'</button><button type="button" class="btn2" data-ai="cover">'+b('Ön yazı','Cover letter')+'</button><button type="button" class="btn2" data-ai="cv">'+b('CV önerisi','CV tips')+'</button></div><div class="aiout" hidden></div></div>'}).join('')}
  ['mf-min','mf-max'].forEach(function(id){$(id).addEventListener('input',drawJobs)});
- function doSearch(){
-  var btn=$('jgo'),q=$('jq').value.trim();btn.disabled=true;btn.innerHTML=b('Aranıyor…','Searching…');say('m-js','');$('jres').innerHTML='<p class="ph">'+b('Aranıyor…','Searching…')+'</p>';
-  ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({query:q})})})
+ function doSearch(auto){
+  var btn=$('jgo'),q=$('jq').value.trim();busy=true;btn.disabled=true;btn.innerHTML=b('Aranıyor…','Searching…');say('m-js','');$('jres').innerHTML='<p class="ph">'+b('Aranıyor…','Searching…')+'</p>';
+  ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({query:q,auto:auto===true})})})
   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,status:r.status,j:j}})})
-  .then(function(x){btn.disabled=false;btn.innerHTML=b('Ara','Search');if(x.j&&x.j.ai_left!=null){aiLeft=x.j.ai_left;showLeft()}
-   if(x.status===429){$('jres').innerHTML='';say('m-js','daily_limit');return}
-   if(!x.ok){$('jres').innerHTML='';say('m-js','generic');return}
-   JOBS=x.j.jobs||[];$('mf').hidden=!JOBS.length;drawJobs()})
-  .catch(function(){btn.disabled=false;btn.innerHTML=b('Ara','Search');$('jres').innerHTML='';say('m-js','network')})}
- $('jgo').addEventListener('click',doSearch);
+  .then(function(x){busy=false;if(x.j&&x.j.ai_left!=null){aiLeft=x.j.ai_left;showLeft()}
+   if(x.j&&x.j.free){freeLeft=x.j.free.premium?null:x.j.free.left}
+   if(x.status===402){$('jres').innerHTML='';freeLeft=0;updGo();return}
+   if(x.status===429){$('jres').innerHTML='';say('m-js','daily_limit');updGo();return}
+   if(!x.ok){$('jres').innerHTML='';say('m-js','generic');updGo();return}
+   lastQ=q;updGo();JOBS=x.j.jobs||[];$('mf').hidden=!JOBS.length;drawJobs()})
+  .catch(function(){busy=false;updGo();$('jres').innerHTML='';say('m-js','network')})}
+ $('jq').addEventListener('input',updGo);
+ $('jgo').addEventListener('click',function(){doSearch(false)});
  $('roles').addEventListener('click',function(e){var t=e.target.closest('button[data-r]');if(!t)return;t.disabled=true;
   rpc('set_my_match',{p_role:t.getAttribute('data-r'),p_status:t.getAttribute('data-s')}).then(function(x){if(x.ok){say('m-roles','saved',true);loadRoles()}else{t.disabled=false;say('m-roles','generic')}})});
  function loadQuestions(){
