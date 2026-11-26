@@ -187,7 +187,8 @@ footer span{display:flex;flex-wrap:wrap;gap:24px}
 .jsearch{margin:0 0 26px;padding:0 0 22px;border-bottom:1px solid #E6E9EE}
 .jrow{display:flex;gap:10px;flex-wrap:wrap}.jrow input{flex:1;min-width:220px;padding:13px 14px;border:1px solid #DDE3EC;border-radius:10px;font:inherit;font-size:16px}.jrow .btn{border:0;cursor:pointer;font-family:inherit}.jrow .btn[disabled]{opacity:.45;cursor:default}.prem{margin:14px 0;padding:18px 20px;border-radius:14px;background:linear-gradient(135deg,#0F2A52,#153A72 60%,#2B5BA8);color:#fff;box-shadow:0 8px 24px rgba(21,58,114,.25)}.prem[hidden]{display:none}.prem b{display:block;font-size:17px;margin:8px 0 4px}.prem p{margin:0;opacity:.85;font-size:14px}.prem .pb{display:inline-block;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.18);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
 .jb{border:1px solid #E6E9EE;border-radius:14px;padding:18px 20px;margin:12px 0 0;background:#fff}.jb h4{margin:0 0 4px;font-size:18px}.jb .meta{margin:0 0 10px;color:#5B6778;font-size:14px}
-.jb .jtop{display:grid;grid-template-columns:1fr 230px;gap:18px;align-items:start}.jb .jr{display:flex;flex-direction:column;gap:7px}.jb .jr .btn2{padding:8px 12px;font-size:13.5px;text-align:center;width:100%;box-sizing:border-box}.jb .jr .btn2.on{background:#EEF3FB;border-color:#153A72;color:#153A72}.jb .jr .hide{opacity:.7;border-style:dashed}.jb .jp{max-height:420px;overflow:auto}.exh{margin:26px 0 8px;font-size:17px;color:#153A72}@media(max-width:700px){.jb .jtop{grid-template-columns:1fr}}
+.jb .jtop{display:grid;grid-template-columns:1fr 230px;gap:18px;align-items:start}.jb .jr{display:flex;flex-direction:column;gap:7px}.jb .jr .btn2{padding:8px 12px;font-size:13.5px;text-align:center;width:100%;box-sizing:border-box}.jb .jr .btn2.on{background:#EEF3FB;border-color:#153A72;color:#153A72}.jb .jr .hide{opacity:.7;border-style:dashed}.jb .jp{max-height:420px;overflow:auto}.jsplit{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:20px;align-items:start;width:min(1100px,94vw);position:relative;left:50%;transform:translateX(-50%)}.jlist .jb{cursor:pointer;margin:0 0 12px}.jlist .jb.sel{border-color:#153A72;box-shadow:0 0 0 2px #153A72 inset}.jlist .jb h4{margin:6px 0 4px;font-size:16px}.jdet{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto;background:#fff;border:1px solid #E6E9EE;border-radius:16px;padding:22px}.jdet[hidden]{display:none}.jdet h3{margin:0 0 6px;font-size:21px}.jdet .dact{display:flex;align-items:center;gap:16px;margin:4px 0 16px}.jdet .lnk{background:none;border:0;color:#5B6778;font:inherit;font-size:14px;cursor:pointer;text-decoration:underline}.jdet .btn{border:0;cursor:pointer;font-family:inherit;text-decoration:none}.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #E6E9EE;padding-bottom:10px;margin-bottom:14px}.tabs button{border:0;background:#F1F4F9;color:#2B3A52;padding:8px 14px;border-radius:999px;font:inherit;font-size:14px;cursor:pointer}.tabs button.on{background:#153A72;color:#fff}.jdet .jp{margin:0;max-height:none;overflow:visible}.jdet .jp.aiout{background:#F7F9FC}.sg{margin:0 0 14px}.sg b{display:block;margin-bottom:6px;font-size:14px}.sg b.g{color:#1B6E3A}.sg b.w{color:#B3261E}.jdet .k{display:inline-block;background:#F3F5F8;border-radius:999px;padding:3px 11px;margin:0 6px 6px 0;font-size:14px}.aistart{display:flex;flex-direction:column;align-items:flex-start;gap:12px}.aistart p{margin:0}@media(max-width:900px){.jsplit{grid-template-columns:1fr;width:auto;left:0;transform:none}.jdet{position:static;max-height:none;margin:0 0 14px}}
+.exh{margin:26px 0 8px;font-size:17px;color:#153A72}@media(max-width:700px){.jb .jtop{grid-template-columns:1fr}}
 .aibtns{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 0}.aibtns .btn2{padding:9px 16px;font-size:14px}
 .mf{margin:16px 0 4px;padding:16px 18px;border:1px solid #E6E9EE;border-radius:16px;background:linear-gradient(180deg,#fff,#F7F9FC)}.mf-h{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}.mf-t{font-weight:600;font-size:14px;color:#0E1B2E}.mf-v{font-weight:700;font-size:14px;color:#153A72;background:#EEF3FB;border-radius:999px;padding:3px 12px}.mf-n{margin:10px 0 0;font-size:13px;color:#5B6778}
 .rng{position:relative;height:28px}.rng-tr{position:absolute;left:0;right:0;top:12px;height:4px;border-radius:4px;background:#DDE3EC}.rng-fill{position:absolute;top:12px;height:4px;border-radius:4px;background:#153A72}
@@ -630,7 +631,7 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
  function runAI(mode,jid,out,btn){
   var old=btn.innerHTML;btn.disabled=true;btn.innerHTML=b('Hazırlanıyor… (~10 sn)','Working… (~10 s)');
   out.hidden=false;out.innerHTML='<span class="ph">'+b('Yapay zekâ çalışıyor, lütfen bekleyin…','AI is working, please wait…')+'</span>';
-  try{out.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){}
+  try{out.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}
   function done(){btn.disabled=false;btn.innerHTML=old}
   ensure().then(function(){return fetch(SB+'/functions/v1/analyze-job',{method:'POST',headers:hdr(),body:JSON.stringify({mode:mode,job_id:jid,lang:L()?'en':'tr'})})})
   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,j:j}})})
@@ -642,30 +643,41 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
    out.querySelector('.cp').addEventListener('click',function(){var t=this;try{navigator.clipboard.writeText(x.j.text).then(function(){t.innerHTML=b('Kopyalandı ✓','Copied ✓')})}catch(e){}});
    try{out.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}})
   .catch(function(){done();out.textContent=tx('network')})}
- $('jres').addEventListener('click',function(e){
-  var box=e.target.closest('.jb');if(!box)return;var id=box.getAttribute('data-id'),pn=box.querySelector('.jp');
-  if(e.target.closest('[data-hide]')){hidAdd(id);drawJobs();return}
-  var t=e.target.closest('button[data-p]');if(!t)return;var k=t.getAttribute('data-p'),j=JBY[id]||{};
-  if(box.getAttribute('data-o')===k){pn.hidden=true;box.setAttribute('data-o','');t.classList.remove('on');return}
-  box.querySelectorAll('button[data-p]').forEach(function(x){x.classList.remove('on')});t.classList.add('on');box.setAttribute('data-o',k);
-  if(k==='str'||k==='gap'){var a=k==='str'?j.strengths:j.gaps;pn.hidden=false;pn.innerHTML='<b>'+(k==='str'?b('Güçlü yönleriniz','Your strengths'):b('Eksik / geliştirilebilir','Gaps'))+'</b><div>'+((a&&a.length)?chipsK(a):'<span class="ph">'+b('Belirtilmemiş','Not specified')+'</span>')+'</div>';return}
-  if(k==='det'){pn.hidden=false;pn.innerHTML='<span class="ph">'+b('Yükleniyor…','Loading…')+'</span>';
-   ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({detail:id})})}).then(function(r){return r.json()}).then(function(x){if(box.getAttribute('data-o')!=='det')return;pn.textContent=x.description||tx('generic')}).catch(function(){pn.textContent=tx('network')});return}
-  runAI(k,id,pn,t)});
+
  $('jcareer').addEventListener('click',function(){runAI('career',null,$('aicareer'),$('jcareer'))});
  var JOBS=[],EXTRA=[],SQ='',JBY={};
  function hidSet(){try{return JSON.parse(localStorage.getItem('nora_hid')||'[]')}catch(e){return []}}
  function hidAdd(id){try{var a=hidSet();a.push(id);localStorage.setItem('nora_hid',JSON.stringify(a.slice(-500)))}catch(e){}}
  var TYP={full_time:['Tam zamanlı','Full-time'],fulltime:['Tam zamanlı','Full-time'],permanent:['Kadrolu','Permanent'],contract:['Sözleşmeli','Contract'],contractor:['Sözleşmeli','Contract'],freelance:['Freelance','Freelance'],part_time:['Yarı zamanlı','Part-time'],parttime:['Yarı zamanlı','Part-time'],internship:['Staj','Internship']};
  function mfRange(){var lo=+$('mf-min').value,hi=+$('mf-max').value;if(lo>hi){var t=lo;lo=hi;hi=t}return [lo,hi]}
-function card(j){var ch=[];JBY[j.id]=j;
-   var place=[j.location,j.country].filter(Boolean);if(place.length)ch.push('<span class="chip2">'+esc(place[0]===place[1]?place[0]:place.join(', '))+'</span>');
+var SEL=null,TAB='sum',LIST=[];
+ function chipsOf(j){var ch=[];var place=[j.location,j.country].filter(Boolean);if(place.length)ch.push('<span class="chip2">'+esc(place[0]===place[1]?place[0]:place.join(', '))+'</span>');
    if(j.mode==='remote')ch.push('<span class="chip2 r">'+b('Uzaktan','Remote')+'</span>');else if(j.mode==='hybrid')ch.push('<span class="chip2 h">'+b('Hibrit','Hybrid')+'</span>');else if(j.mode==='onsite')ch.push('<span class="chip2">'+b('Ofiste','On-site')+'</span>');
    if(j.req_years)ch.push('<span class="chip2 y">'+b('En az '+j.req_years+' yıl deneyim','At least '+j.req_years+' yrs experience')+'</span>');
-   var ty=j.type&&TYP[String(j.type).toLowerCase().replace(/[\\s-]/g,'_')];if(ty)ch.push('<span class="chip2">'+b(ty[0],ty[1])+'</span>');
-   return '<div class="jb" data-id="'+esc(j.id)+'"><div class="jtop"><div class="jl"><span class="sc2">'+j.score+'% '+b('uyum','match')+'</span><h4>'+esc(j.title)+'</h4><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+esc(j.company||'')+'</p>'+(ch.length?'<div class="chips2">'+ch.join('')+'</div>':'')+'</div>'+
-    '<div class="jr"><button type="button" class="btn2" data-p="str">'+b('Güçlü yönler','Strengths')+'</button><button type="button" class="btn2" data-p="gap">'+b('Eksikler','Gaps')+'</button><button type="button" class="btn2" data-p="det">'+b('İlan detayı','Job details')+'</button><button type="button" class="btn2" data-p="compare">'+b('Yapay zekâ analizi','AI analysis')+'</button><button type="button" class="btn2" data-p="cover">'+b('Ön yazı','Cover letter')+'</button><button type="button" class="btn2" data-p="cv">'+b('CV önerisi','CV tips')+'</button>'+
-    (j.apply_url?'<a class="btn2" target="_blank" rel="noopener noreferrer" href="'+esc(j.apply_url)+'">'+b('İlana git','Open posting')+'</a>':'')+'<button type="button" class="btn2 hide" data-hide="1">'+b('İlgilenmiyorum','Not interested')+'</button></div></div><div class="jp aiout" hidden></div></div>'}
+   var ty=j.type&&TYP[String(j.type).toLowerCase().replace(/[\\s-]/g,'_')];if(ty)ch.push('<span class="chip2">'+b(ty[0],ty[1])+'</span>');return ch.join('')}
+ function card(j){JBY[j.id]=j;
+   return '<div class="jb'+(j.id===SEL?' sel':'')+'" data-id="'+esc(j.id)+'" tabindex="0"><span class="sc2">'+j.score+'% '+b('uyum','match')+'</span><h4>'+esc(j.title)+'</h4><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+esc(j.company||'')+'</p><div class="chips2">'+chipsOf(j)+'</div></div>'}
+ var TABS=[['sum','Özet','Summary'],['det','İlan detayı','Job details'],['compare','Yapay zekâ analizi','AI analysis'],['cover','Ön yazı','Cover letter'],['cv','CV önerisi','CV tips']];
+ function detHtml(j){
+  return '<div class="dh"><h3>'+esc(j.title)+'</h3><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+esc(j.company||'')+'</p><div class="chips2">'+chipsOf(j)+'</div>'+
+   '<div class="dact">'+(j.apply_url?'<a class="btn" target="_blank" rel="noopener noreferrer" href="'+esc(j.apply_url)+'">'+b('İlana git','Open posting')+'</a>':'')+'<button type="button" class="lnk" data-hide="1">'+b('İlgilenmiyorum','Not interested')+'</button></div></div>'+
+   '<div class="tabs">'+TABS.map(function(t){return '<button type="button" data-t="'+t[0]+'"'+(t[0]===TAB?' class="on"':'')+'>'+b(t[1],t[2])+'</button>'}).join('')+'</div><div class="jp"></div>'}
+ function showTab(){
+  var det=$('jdet');if(!det||!SEL)return;var j=JBY[SEL],pn=det.querySelector('.jp');
+  det.querySelectorAll('.tabs button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-t')===TAB)});
+  if(TAB==='sum'){pn.className='jp';pn.innerHTML='<div class="sg"><b class="g">'+b('Güçlü yönleriniz','Your strengths')+'</b><div>'+chipsK(j.strengths||[])+'</div></div><div class="sg"><b class="w">'+b('Eksik / geliştirilebilir','Gaps')+'</b><div>'+chipsK(j.gaps||[])+'</div></div>';return}
+  pn.className='jp aiout';
+  if(TAB==='det'){pn.innerHTML='<span class="ph">'+b('Yükleniyor…','Loading…')+'</span>';var id=SEL;
+   ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({detail:id})})}).then(function(r){return r.json()}).then(function(x){if(SEL===id&&TAB==='det')pn.textContent=x.description||tx('generic')}).catch(function(){pn.textContent=tx('network')});return}
+  pn.innerHTML='<div class="aistart"><p class="ph">'+({compare:b('Profilinizi bu ilanla karşılaştırır.','Compares your profile with this role.'),cover:b('Bu ilan için ön yazı hazırlar.','Drafts a cover letter for this role.'),cv:b('CV’nizi bu ilana göre uyarlama önerileri verir.','Suggests how to tailor your CV.')})[TAB]+'</p><button type="button" class="btn" data-run="'+TAB+'">'+b('Hazırla','Generate')+'</button></div>'}
+ function selectJob(id,scroll){
+  SEL=id;TAB='sum';var j=JBY[id];if(!j)return;
+  document.querySelectorAll('#jres .jb').forEach(function(x){x.classList.toggle('sel',x.getAttribute('data-id')===id)});
+  var det=$('jdet');det.innerHTML=detHtml(j);det.hidden=false;
+  var card=document.querySelector('#jres .jb[data-id="'+id+'"]');
+  if(window.innerWidth<=900&&card){card.after(det);if(scroll)try{det.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}}
+  else if(!det.parentNode.classList.contains('jsplit')){document.querySelector('#jres .jsplit').appendChild(det)}
+  showTab()}
  function drawJobs(){
   var r=mfRange(),lo=r[0],hi=r[1];$('mf-v').textContent='%'+lo+' – %'+hi;
   var f=$('rng-fill');f.style.left=lo+'%';f.style.width=(hi-lo)+'%';
@@ -677,8 +689,16 @@ function card(j){var ch=[];JBY[j.id]=j;
   if(SQ&&!list.length)h+='<p class="ph">'+b('Aramanızla eşleşen ilan yok.','Nothing matched your search.')+'</p>';
   h+=list.map(card).join('');
   if(ex.length)h+='<h3 class="exh">'+b('CV’nize göre ilanlar','Roles based on your CV')+'</h3>'+ex.map(card).join('');
-  if(!list.length&&!ex.length&&!h)h='<p class="ph">'+b('Bu uyum aralığında ilan yok. Aralığı genişletin.','No roles in this range. Widen the range.')+'</p>';
-  $('jres').innerHTML=h}
+  if(!list.length&&!ex.length){$('jres').innerHTML='<p class="ph">'+b('Bu uyum aralığında ilan yok. Aralığı genişletin.','No roles in this range. Widen the range.')+'</p>';return}
+  var all=list.concat(ex);LIST=all;
+  $('jres').innerHTML='<div class="jsplit"><div class="jlist">'+h+'</div><div class="jdet" id="jdet" hidden></div></div>';
+  var pick=all.filter(function(x){return x.id===SEL})[0]||all[0];
+  if(window.innerWidth>900)selectJob(pick.id,false);else SEL=null}
+ $('jres').addEventListener('click',function(e){
+  var hb=e.target.closest('[data-hide]');if(hb&&SEL){hidAdd(SEL);SEL=null;drawJobs();return}
+  var tb=e.target.closest('.tabs button');if(tb){TAB=tb.getAttribute('data-t');showTab();return}
+  var rb=e.target.closest('[data-run]');if(rb){runAI(rb.getAttribute('data-run'),SEL,rb.closest('.jp'),rb);return}
+  var c=e.target.closest('.jb');if(c)selectJob(c.getAttribute('data-id'),true)});
  ['mf-min','mf-max'].forEach(function(id){$(id).addEventListener('input',drawJobs)});
  function doSearch(){
   var btn=$('jgo'),q=$('jq').value.trim();busy=true;btn.disabled=true;btn.innerHTML=b('Aranıyor…','Searching…');say('m-js','');$('jres').innerHTML='<p class="ph">'+b('Aranıyor…','Searching…')+'</p>';
