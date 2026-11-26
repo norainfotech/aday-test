@@ -661,7 +661,7 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
  var TYP={full_time:['Tam zamanlı','Full-time'],fulltime:['Tam zamanlı','Full-time'],permanent:['Kadrolu','Permanent'],contract:['Sözleşmeli','Contract'],contractor:['Sözleşmeli','Contract'],freelance:['Freelance','Freelance'],part_time:['Yarı zamanlı','Part-time'],parttime:['Yarı zamanlı','Part-time'],internship:['Staj','Internship']};
  function mfRange(){var lo=+$('mf-min').value,hi=+$('mf-max').value;if(lo>hi){var t=lo;lo=hi;hi=t}return [lo,hi]}
 var SEL=null,TAB='det',LIST=[];
- function chipsOf(j){var ch=[];var place=[j.location,j.country].filter(Boolean);if(place.length)ch.push('<span class="chip2">'+esc(place[0]===place[1]?place[0]:place.join(', '))+'</span>');
+ function chipsOf(j){var ch=[];var cn=j.country;for(var ci=0;ci<CTRY.length;ci++){if(CTRY[ci][0]===cn){cn=L()?CTRY[ci][2]:CTRY[ci][1];break}}var place=[j.location,cn].filter(Boolean);if(place.length)ch.push('<span class="chip2">'+esc(place[0]===place[1]?place[0]:place.join(', '))+'</span>');
    if(j.mode==='remote')ch.push('<span class="chip2 r">'+b('Uzaktan','Remote')+'</span>');else if(j.mode==='hybrid')ch.push('<span class="chip2 h">'+b('Hibrit','Hybrid')+'</span>');else if(j.mode==='onsite')ch.push('<span class="chip2">'+b('Ofiste','On-site')+'</span>');
    if(j.req_years)ch.push('<span class="chip2 y">'+b('En az '+j.req_years+' yıl deneyim','At least '+j.req_years+' yrs experience')+'</span>');
    var ty=j.type&&TYP[String(j.type).toLowerCase().replace(/[\\s-]/g,'_')];if(ty)ch.push('<span class="chip2">'+b(ty[0],ty[1])+'</span>');return ch.join('')}
