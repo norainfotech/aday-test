@@ -173,10 +173,10 @@ footer span{display:flex;flex-wrap:wrap;gap:24px}
 .tags .tg2 button{border:0;background:none;color:#153A72;font-size:16px;line-height:1;cursor:pointer;padding:0 4px;border-radius:50%}
 .tags input{flex:1;min-width:140px;border:0!important;padding:6px 4px!important;box-shadow:none!important;background:transparent!important}
 .hint{font-size:13px;color:#8590A2;margin:6px 0 0;font-weight:400}
-fieldset.q{border:0;margin:0 0 24px;padding:0}fieldset.q legend{padding:0;margin:0 0 10px;font-size:15px;font-weight:600;color:#0E1B2E}
-.chs{display:flex;flex-wrap:wrap;gap:10px}
+.q{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px 16px;margin:0 0 14px;padding:0}.q>.qt{flex:0 0 190px;padding-top:7px;font-size:15px;font-weight:600;color:#0E1B2E}.q>.chs,.q>#langs{flex:1 1 280px;min-width:0}.q.rb{display:block}@media(max-width:640px){.q>.qt{flex-basis:100%;padding-top:0}}
+.chs{display:flex;flex-wrap:wrap;gap:8px}
 .ch{position:relative}.ch input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-.ch>span{display:inline-flex;align-items:center;padding:11px 18px;border:1px solid #DDE3EC;border-radius:999px;background:#fff;font-size:15px;font-weight:500;color:#3D4859;transition:all .15s}
+.ch>span{display:inline-flex;align-items:center;padding:7px 14px;border:1px solid #DDE3EC;border-radius:999px;background:#fff;font-size:14px;font-weight:500;color:#3D4859;transition:all .15s}
 .ch:hover>span{border-color:#153A72}
 .ch input:checked+span{background:#153A72;border-color:#153A72;color:#fff}
 .ch input:focus-visible+span{outline:3px solid #6B93D6;outline-offset:2px}
@@ -219,7 +219,7 @@ details.acct .in{padding-top:18px}
 .ic-back{width:40px;height:40px;border-radius:50%;border:1px solid #DDE3EC;background:#fff;color:#153A72;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s}.ic-back:hover{background:#EEF3FB}
 .lrow{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin:0 0 10px}
 .lrow label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:#5B6778;font-weight:500}
-.lrow select{padding:10px 10px;font-size:15px;min-width:92px}.lrow select.lg{min-width:150px}
+.lrow select{padding:9px 8px;font-size:14px;min-width:76px}.lrow select.lg{min-width:122px}.lrow #lang-add{white-space:nowrap;margin:0 0 1px auto}
 .lrow .rm{width:38px;height:38px;border:0;background:none;color:#8590A2;font-size:22px;cursor:pointer;border-radius:50%}.lrow .rm:hover{background:#F3F5F8;color:#B3261E}
 .tf{display:contents}.tf em{font-style:normal;font-size:14px;color:#5B6778;margin:0 2px 0 10px;align-self:center}
 .pt [hidden]{display:none!important}
@@ -283,41 +283,40 @@ details.acct .in{padding-top:18px}
 
 <section class="pp" id="s2" hidden aria-labelledby="h2s">
 <h2 id="h2s"><span class="tr">Tercihleriniz</span><span class="en">Your preferences</span></h2>
-<p class="lead"><span class="tr">Aradığınız rolün özelliklerini seçin; size yalnızca uygun ilanları gösterelim.</span><span class="en">Choose the features of the role you are looking for so we only show what fits.</span></p>
+<p class="lead"><span class="tr">Aradığınız rolün özelliklerini seçin.</span><span class="en">Choose what you are looking for.</span></p>
 <form id="f-pref" novalidate>
-<fieldset class="q"><legend><span class="tr">Çalışma şekli</span><span class="en">Engagement type</span></legend><div class="chs">
-<label class="ch"><input type="radio" name="kind" value="contract"><span><span class="tr">Sözleşmeli</span><span class="en">Contract</span></span></label>
-<label class="ch"><input type="radio" name="kind" value="permanent"><span><span class="tr">Kadrolu</span><span class="en">Permanent employee</span></span></label>
-<label class="ch"><input type="radio" name="kind" value="any"><span><span class="tr">Fark etmez</span><span class="en">Either</span></span></label></div></fieldset>
-<fieldset class="q"><legend><span class="tr">Çalışma modeli</span><span class="en">Work model</span></legend><div class="chs">
+<div class="q" role="group"><div class="qt"><span class="tr">Çalışma şekli</span><span class="en">Engagement type</span></div><div class="chs">
+<label class="ch"><input type="checkbox" name="kind" value="contract"><span><span class="tr">Sözleşmeli</span><span class="en">Contract</span></span></label>
+<label class="ch"><input type="checkbox" name="kind" value="permanent"><span><span class="tr">Kadrolu</span><span class="en">Permanent employee</span></span></label></div></div>
+<div class="q" role="group"><div class="qt"><span class="tr">Çalışma modeli</span><span class="en">Work model</span></div><div class="chs">
 <label class="ch"><input type="checkbox" name="work" value="remote"><span><span class="tr">Uzaktan</span><span class="en">Remote</span></span></label>
 <label class="ch"><input type="checkbox" name="work" value="hybrid"><span><span class="tr">Hibrit</span><span class="en">Hybrid</span></span></label>
-<label class="ch"><input type="checkbox" name="work" value="onsite"><span><span class="tr">Ofiste</span><span class="en">On-site</span></span></label></div></fieldset>
-<fieldset class="q"><legend><span class="tr">Müsaitlik</span><span class="en">Availability</span></legend><div class="chs">
+<label class="ch"><input type="checkbox" name="work" value="onsite"><span><span class="tr">Ofiste</span><span class="en">On-site</span></span></label></div></div>
+<div class="q" role="group"><div class="qt"><span class="tr">Müsaitlik</span><span class="en">Availability</span></div><div class="chs">
 <label class="ch"><input type="radio" name="availability" value="now"><span><span class="tr">Hemen</span><span class="en">Immediately</span></span></label>
 <label class="ch"><input type="radio" name="availability" value="1m"><span><span class="tr">1 ay içinde</span><span class="en">Within 1 month</span></span></label>
 <label class="ch"><input type="radio" name="availability" value="3m"><span><span class="tr">2–3 ay içinde</span><span class="en">Within 2–3 months</span></span></label>
-<label class="ch"><input type="radio" name="availability" value="later"><span><span class="tr">Daha sonra</span><span class="en">Later</span></span></label></div></fieldset>
-<fieldset class="q"><legend><span class="tr">Çalışmak istediğiniz ülkeler</span><span class="en">Countries you would work in</span></legend><div class="chs" id="ctry"></div></fieldset>
-<div id="rate-box" hidden class="q"><label class="f" style="margin:0"><span class="lb"><span id="rate-lb"></span></span>
+<label class="ch"><input type="radio" name="availability" value="later"><span><span class="tr">Daha sonra</span><span class="en">Later</span></span></label></div></div>
+<div class="q" role="group"><div class="qt"><span class="tr">Çalışmak istediğiniz ülkeler</span><span class="en">Countries you would work in</span></div><div class="chs" id="ctry"></div></div>
+<div id="rate-box" hidden class="q rb"><label class="f" style="margin:0"><span class="lb"><span id="rate-lb"></span></span>
 <span class="rate"><input type="number" name="rate_amount" min="0" step="any" inputmode="decimal" placeholder="0"><select name="rate_cur" aria-label="Currency"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="TRY">TRY ₺</option><option value="GBP">GBP £</option></select></span></label>
-<p class="hint"><span class="tr">İsteğe bağlı. Yalnızca eşleştirme için kullanılır, müşteriyle onayınız olmadan paylaşılmaz.</span><span class="en">Optional. Used only for matching and never shared with a client without your consent.</span></p></div>
-<fieldset class="q"><legend><span class="tr">Dil bilgisi</span><span class="en">Languages</span></legend><div id="langs"></div>
-<button type="button" class="btn2 sm" id="lang-add"><span class="tr">+ Dil ekle</span><span class="en">+ Add language</span></button></fieldset>
-<fieldset class="q"><legend><span class="tr">Yurt içi seyahat edebilir misiniz?</span><span class="en">Can you travel within your country?</span></legend><div class="chs">
+<p class="hint"><span class="tr">İsteğe bağlı; yalnızca eşleştirmede kullanılır.</span><span class="en">Optional; used for matching only.</span></p></div>
+<div class="q" role="group"><div class="qt"><span class="tr">Dil bilgisi</span><span class="en">Languages</span></div><div id="langs"></div>
+<button type="button" class="btn2 sm" id="lang-add" style="margin-bottom:1px"><span class="tr">+ Dil ekle</span><span class="en">+ Add language</span></button></div>
+<div class="q" role="group"><div class="qt"><span class="tr">Yurt içi seyahat edebilir misiniz?</span><span class="en">Can you travel within your country?</span></div><div class="chs">
 <label class="ch"><input type="radio" name="tdom" value="yes"><span><span class="tr">Evet</span><span class="en">Yes</span></span></label>
 <label class="ch"><input type="radio" name="tdom" value="no"><span><span class="tr">Hayır</span><span class="en">No</span></span></label>
 <span class="tf" id="tf-dom" hidden><em><span class="tr">Ne sıklıkla?</span><span class="en">How often?</span></em>
 <label class="ch"><input type="radio" name="tfdom" value="week_days"><span><span class="tr">Haftada birkaç gün</span><span class="en">A few days a week</span></span></label>
 <label class="ch"><input type="radio" name="tfdom" value="month_days"><span><span class="tr">Ayda birkaç gün</span><span class="en">A few days a month</span></span></label>
-<label class="ch"><input type="radio" name="tfdom" value="urgent"><span><span class="tr">Yalnızca acil durumlarda</span><span class="en">Only in urgent cases</span></span></label></span></div></fieldset>
-<fieldset class="q"><legend><span class="tr">Yurt dışı seyahat edebilir misiniz?</span><span class="en">Can you travel abroad?</span></legend><div class="chs">
+<label class="ch"><input type="radio" name="tfdom" value="urgent"><span><span class="tr">Yalnızca acil durumlarda</span><span class="en">Only in urgent cases</span></span></label></span></div></div>
+<div class="q" role="group"><div class="qt"><span class="tr">Yurt dışı seyahat edebilir misiniz?</span><span class="en">Can you travel abroad?</span></div><div class="chs">
 <label class="ch"><input type="radio" name="tint" value="yes"><span><span class="tr">Evet</span><span class="en">Yes</span></span></label>
 <label class="ch"><input type="radio" name="tint" value="no"><span><span class="tr">Hayır</span><span class="en">No</span></span></label>
 <span class="tf" id="tf-int" hidden><em><span class="tr">Ne sıklıkla?</span><span class="en">How often?</span></em>
 <label class="ch"><input type="radio" name="tfint" value="week_days"><span><span class="tr">Haftada birkaç gün</span><span class="en">A few days a week</span></span></label>
 <label class="ch"><input type="radio" name="tfint" value="month_days"><span><span class="tr">Ayda birkaç gün</span><span class="en">A few days a month</span></span></label>
-<label class="ch"><input type="radio" name="tfint" value="urgent"><span><span class="tr">Yalnızca acil durumlarda</span><span class="en">Only in urgent cases</span></span></label></span></div></fieldset>
+<label class="ch"><input type="radio" name="tfint" value="urgent"><span><span class="tr">Yalnızca acil durumlarda</span><span class="en">Only in urgent cases</span></span></label></span></div></div>
 <label class="f"><span class="lb"><span><span class="tr">İlgilendiğiniz alanlar ve roller</span><span class="en">Areas and roles of interest</span></span></span><input type="text" name="focus" maxlength="300" placeholder="SAP FI/CO, S/4HANA geçişi, proje yönetimi"></label>
 <div class="row-a"><button type="button" class="btn2" id="back2"><span class="tr">Geri</span><span class="en">Back</span></button><button class="btn" type="submit"><span class="tr">Kaydet ve ilanları gör</span><span class="en">Save and see roles</span></button></div>
 <p class="msg" id="m-pref" role="status" aria-live="polite"></p>
@@ -326,12 +325,12 @@ details.acct .in{padding-top:18px}
 
 <section class="pp" id="s3" hidden aria-labelledby="h3s">
 <h2 id="h3s"><span class="tr">Size uygun ilanlar</span><span class="en">Roles suited to you</span></h2>
-<p class="lead"><span class="tr">İlgi bildirmeniz profilinizi müşteriyle paylaştığımız anlamına gelmez; paylaşmadan önce sizden ayrıca açık onay isteriz.</span><span class="en">Showing interest does not mean we share your profile with a client; we ask for your separate explicit consent first.</span></p>
+<p class="lead"><span class="tr">Profiliniz, ayrı onayınız olmadan müşteriyle paylaşılmaz.</span><span class="en">Your profile is not shared with a client without your separate consent.</span></p>
 <div class="sum" id="sum" hidden><span id="sum-t"></span><a id="sum-e"><span class="tr">Tercihleri düzenle</span><span class="en">Edit preferences</span></a></div>
-<div class="note-ok" id="reconsent" hidden><span><span class="tr">Rıza metnimiz güncellendi: CV'niz ve iletişim bilgileriniz uygun işverenlerle Nora aracılığıyla paylaşılabilir. Güncel metni kabul etmezseniz işverenler sizi göremez.</span><span class="en">Our consent text has been updated: your CV and contact details may be shared with suitable employers through Nora. Unless you accept it, employers cannot see you.</span> <a href="privacy.html#cv-havuzu"><span class="tr">Aydınlatma metni</span><span class="en">Privacy notice</span></a></span><button type="button" class="btn2" id="reconsent-go"><span class="tr">Kabul ediyorum</span><span class="en">I accept</span></button></div>
-<div id="creq" hidden><h3 style="margin:0 0 8px;font-size:20px"><span class="tr">İşveren iletişim istekleri</span><span class="en">Employer contact requests</span></h3><p class="ph"><span class="tr">Kabul ederseniz Outsourcing ekibi sizi işverenle buluşturur; bilgileriniz size sorulmadan doğrudan işverene verilmez.</span><span class="en">If you accept, the Outsourcing team introduces you to the employer; your details are not handed directly to the employer.</span></p><div id="creq-l"></div><p class="msg" id="m-creq" role="status" aria-live="polite"></p></div>
+<div class="note-ok" id="reconsent" hidden><span><span class="tr">Rıza metni güncellendi: CV ve iletişim bilgileriniz uygun işverenlerle Nora aracılığıyla paylaşılabilir. Kabul etmezseniz işverenler sizi göremez.</span><span class="en">Consent text updated: your CV and contact details may be shared with suitable employers via Nora. Without acceptance, employers cannot see you.</span> <a href="privacy.html#cv-havuzu"><span class="tr">Aydınlatma metni</span><span class="en">Privacy notice</span></a></span><button type="button" class="btn2" id="reconsent-go"><span class="tr">Kabul ediyorum</span><span class="en">I accept</span></button></div>
+<div id="creq" hidden><h3 style="margin:0 0 8px;font-size:20px"><span class="tr">İşveren iletişim istekleri</span><span class="en">Employer contact requests</span></h3><p class="ph"><span class="tr">Kabul ederseniz Outsourcing ekibi sizi işverenle buluşturur; bilgileriniz doğrudan verilmez.</span><span class="en">If you accept, the Outsourcing team introduces you; your details are not handed over directly.</span></p><div id="creq-l"></div><p class="msg" id="m-creq" role="status" aria-live="polite"></p></div>
 <div class="jsearch"><h3 style="margin:0 0 6px;font-size:20px"><span class="tr">İlan ara</span><span class="en">Search roles</span></h3>
-<p class="ph"><span class="tr">Her gün güncellenen ilan havuzunda profilinize ve tercihlerinize göre arar; her ilan için güçlü ve eksik yönlerinizi gösterir. Arama ücretsizdir. Yapay zekâ analizi, ön yazı ve CV önerisi günde 5 kullanım hakkıyla sunulur.</span><span class="en">Searches a daily-updated pool of roles based on your profile and preferences, and shows your strengths and gaps for each. Search is free. AI analysis, cover letters and CV suggestions are available with 5 uses per day.</span></p>
+<p class="ph"><span class="tr">Arama ücretsiz. Yapay zekâ analizi, ön yazı ve CV önerisi: günde 5 hak.</span><span class="en">Search is free. AI analysis, cover letter and CV tips: 5 uses a day.</span></p>
 <div class="jrow"><input id="jq" maxlength="80" aria-label="Search" placeholder="Boş bırakırsanız profilinizden aranır / Leave empty to use your profile"><button type="button" class="btn" id="jgo"><span class="tr">Ara</span><span class="en">Search</span></button><button type="button" class="btn2" id="jcareer"><span class="tr">Kariyer önerisi</span><span class="en">Career suggestions</span></button></div><div class="aiout" id="aicareer" hidden></div>
 <p class="msg" id="m-js" role="status" aria-live="polite"></p><div id="jres"></div></div>
 <div id="roles"></div><p class="msg" id="m-roles" role="status" aria-live="polite"></p>
@@ -393,7 +392,7 @@ details.acct .in{padding-top:18px}
   save_failed:['Kaydedilemedi. Lütfen daha sonra tekrar deneyin.','Could not save. Please try again later.'],
   lang_incomplete:['Lütfen her dil için konuşma, okuma ve yazma seviyesini seçin.','Please choose speaking, reading and writing levels for each language.'],
   travel_freq_required:['Seyahat edebiliyorsanız lütfen sıklığı seçin.','If you can travel, please choose how often.'],
-  choose_required:['Lütfen çalışma şekli ve müsaitlik seçin.','Please choose an engagement type and availability.'],
+  choose_required:['Çalışma şekli ve müsaitlik seçin.','Choose engagement type and availability.'],
   deleted:['Hesabınız ve verileriniz silindi.','Your account and data were deleted.'],
   delete_failed:['Silinemedi. Lütfen tekrar deneyin.','Could not delete. Please try again.']};
  function tx(k){var v=T[k]||T.generic;return v[L()]}
@@ -525,7 +524,7 @@ details.acct .in{padding-top:18px}
  $('dz').addEventListener('drop',function(e){var fl=e.dataTransfer&&e.dataTransfer.files[0];handleFile(fl)});
 
  // ---- 2. adım: tercihler
- var CTRY=[['TR','Türkiye','Türkiye'],['DE','Almanya','Germany'],['NL','Hollanda','Netherlands'],['GB','Birleşik Krallık','United Kingdom'],['CH','İsviçre','Switzerland'],['AT','Avusturya','Austria'],['FR','Fransa','France'],['BE','Belçika','Belgium'],['AE','BAE','UAE'],['SA','Suudi Arabistan','Saudi Arabia'],['US','ABD','USA'],['CA','Kanada','Canada'],['OTHER','Diğer','Other'],['ANY','Fark etmez','Anywhere']];
+ var CTRY=[['TR','Türkiye','Türkiye'],['DE','Almanya','Germany'],['NL','Hollanda','Netherlands'],['GB','Birleşik Krallık','United Kingdom'],['CH','İsviçre','Switzerland'],['AT','Avusturya','Austria'],['FR','Fransa','France'],['BE','Belçika','Belgium'],['OTHER','Diğer','Other'],['AE','BAE','UAE','h'],['SA','Suudi Arabistan','Saudi Arabia','h'],['US','ABD','USA','h'],['CA','Kanada','Canada','h'],['ANY','Fark etmez','Anywhere','h']];
  var LANG=[['tr','Türkçe','Turkish'],['en','İngilizce','English'],['de','Almanca','German'],['nl','Felemenkçe','Dutch'],['fr','Fransızca','French'],['ar','Arapça','Arabic'],['ru','Rusça','Russian'],['es','İspanyolca','Spanish'],['it','İtalyanca','Italian'],['other','Diğer','Other']];
  var LV=['A1','A2','B1','B2','C1','C2','N'];
  function lvn(v){return v==='N'?b('Anadil','Native'):esc(v)}
@@ -533,7 +532,7 @@ details.acct .in{padding-top:18px}
  var CUR={EUR:'€',USD:'$',TRY:'₺',GBP:'£'};
  function nm(list,code){var r=list.filter(function(x){return x[0]===code})[0];return r?b(r[1],r[2]):esc(code)}
   (function build(){
-  $('ctry').innerHTML=CTRY.map(function(c){return '<label class="ch"><input type="checkbox" name="countries" value="'+c[0]+'"><span>'+b(c[1],c[2])+'</span></label>'}).join('')})();
+  $('ctry').innerHTML=CTRY.filter(function(c){return c[3]!=='h'}).map(function(c){return '<label class="ch"><input type="checkbox" name="countries" value="'+c[0]+'"><span>'+b(c[1],c[2])+'</span></label>'}).join('')})();
  function lvOpts(sel){return '<option value="">'+(L()?'Level':'Seviye')+'</option>'+LV.map(function(v){return '<option value="'+v+'"'+(v===sel?' selected':'')+'>'+(v==='N'?(L()?'Native':'Anadil'):v)+'</option>'}).join('')}
  function addLang(d){d=d||{};var r=document.createElement('div');r.className='lrow';
   r.innerHTML='<label><span class="tr">Dil</span><span class="en">Language</span><select class="lg" aria-label="Language"><option value="">'+(L()?'Select':'Dil seçin')+'</option>'+LANG.map(function(l){return '<option value="'+l[0]+'"'+(l[0]===d.l?' selected':'')+'>'+(L()?l[2]:l[1])+'</option>'}).join('')+'</select></label>'
@@ -541,23 +540,26 @@ details.acct .in{padding-top:18px}
    +'<label><span class="tr">Okuma</span><span class="en">Reading</span><select class="rd">'+lvOpts(d.rd)+'</select></label>'
    +'<label><span class="tr">Yazma</span><span class="en">Writing</span><select class="wr">'+lvOpts(d.wr)+'</select></label>'
    +'<button type="button" class="rm" aria-label="Remove">×</button>';
-  r.querySelector('.rm').addEventListener('click',function(){r.remove();if(!$('langs').children.length)addLang()});
-  $('langs').appendChild(r)}
+  r.querySelector('.rm').addEventListener('click',function(){r.remove();if(!$('langs').children.length)addLang();else placeAdd()});
+  $('langs').appendChild(r);placeAdd()}
+ function placeAdd(){var rows=$('langs').children;if(rows.length)rows[rows.length-1].appendChild($('lang-add'))}
  $('lang-add').addEventListener('click',function(){addLang()});
  function langVals(){return [].map.call($('langs').querySelectorAll('.lrow'),function(r){return {l:r.querySelector('.lg').value,sp:r.querySelector('.sp').value,rd:r.querySelector('.rd').value,wr:r.querySelector('.wr').value}}).filter(function(x){return x.l||x.sp||x.rd||x.wr})}
- function syncRate(){var k=($('f-pref').querySelector('input[name=kind]:checked')||{}).value;$('rate-box').hidden=!k;
-  $('rate-lb').innerHTML=k==='contract'?b('Günlük ücret beklentiniz','Your expected daily rate'):b('Aylık ücret beklentiniz','Your expected monthly salary')}
+ function kinds(){return [].map.call($('f-pref').querySelectorAll('input[name=kind]:checked'),function(i){return i.value})}
+ function syncRate(){var ks=kinds();$('rate-box').hidden=!ks.length;
+  $('rate-lb').innerHTML=ks.length===2?b('Ücret beklentiniz (günlük / aylık)','Expected rate (daily / monthly)'):ks[0]==='contract'?b('Günlük ücret beklentiniz','Your expected daily rate'):b('Aylık ücret beklentiniz','Your expected monthly salary')}
 function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked'),t=f.querySelector('input[name=tint]:checked');$('tf-dom').hidden=!(d&&d.value==='yes');$('tf-int').hidden=!(t&&t.value==='yes')}
  $('f-pref').addEventListener('change',function(e){var t=e.target;
   if(t.name==='kind')syncRate();if(t.name==='tdom'||t.name==='tint')syncTrv();
   if(t.name==='countries'&&t.checked){var any=t.value==='ANY';[].forEach.call($('f-pref').querySelectorAll('input[name=countries]'),function(i){if(i!==t&&(any||i.value==='ANY'))i.checked=false})}});
  function fillPrefs(){
   var p=cand.prefs||{},f=$('f-pref');
-  [].forEach.call(f.querySelectorAll('input[name=kind],input[name=availability]'),function(i){i.checked=p[i.name]===i.value});
+  [].forEach.call(f.querySelectorAll('input[name=kind]'),function(i){i.checked=p.kind==='any'||p.kind===i.value});
+  [].forEach.call(f.querySelectorAll('input[name=availability]'),function(i){i.checked=p.availability===i.value});
   [].forEach.call(f.querySelectorAll('input[name=work]'),function(i){i.checked=(p.work||[]).indexOf(i.value)>-1});
   var cs=Array.isArray(p.countries)?p.countries:[];
   [].forEach.call(f.querySelectorAll('input[name=countries]'),function(i){i.checked=cs.indexOf(i.value)>-1});
-  $('langs').innerHTML='';(Array.isArray(p.langs)&&p.langs.length?p.langs:[{}]).forEach(addLang);
+  $('langs').parentNode.appendChild($('lang-add'));$('langs').innerHTML='';(Array.isArray(p.langs)&&p.langs.length?p.langs:[{}]).forEach(addLang);
   f.rate_amount.value=p.rate_amount==null?'':p.rate_amount;f.rate_cur.value=p.rate_cur||'EUR';
   [].forEach.call(f.querySelectorAll('input[name=tdom]'),function(i){i.checked=p.travel_dom!=null&&(p.travel_dom?'yes':'no')===i.value});
   [].forEach.call(f.querySelectorAll('input[name=tint]'),function(i){i.checked=p.travel_int!=null&&(p.travel_int?'yes':'no')===i.value});
@@ -566,7 +568,7 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
   f.focus.value=p.focus||'';syncRate();syncTrv()}
  $('back2').addEventListener('click',function(){go(1)});
  $('f-pref').addEventListener('submit',function(e){e.preventDefault();var f=e.target,btn=f.querySelector('button[type=submit]');
-  var kind=(f.querySelector('input[name=kind]:checked')||{}).value,av=(f.querySelector('input[name=availability]:checked')||{}).value;
+  var ks=kinds(),kind=ks.length===2?'any':ks[0],av=(f.querySelector('input[name=availability]:checked')||{}).value;
   if(!kind||!av){say('m-pref','choose_required');return}
   function vals(n){return [].map.call(f.querySelectorAll('input[name='+n+']:checked'),function(i){return i.value})}
   var langs=langVals();
@@ -581,12 +583,13 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
 
  // ---- 3. adım: ilanlar
  var KIND={permanent:['Kadrolu','Permanent employee'],contract:['Sözleşmeli','Contract'],any:['Fark etmez','Either']};
+ var KINDC={permanent:['Kadrolu','Permanent employee'],contract:['Sözleşmeli','Contract'],any:['Sözleşmeli · Kadrolu','Contract · Permanent']};
  var WORK={remote:['Uzaktan','Remote'],hybrid:['Hibrit','Hybrid'],onsite:['Ofiste','On-site']};
  var AV={now:['Hemen','Immediately'],'1m':['1 ay içinde','Within 1 month'],'3m':['2–3 ay içinde','Within 2–3 months'],later:['Daha sonra','Later']};
  function renderDyn(){
   var p=(cand&&cand.prefs)||{};if(!p.done_at){$('sum').hidden=true;return}
   var parts=[];
-  if(KIND[p.kind])parts.push(b(KIND[p.kind][0],KIND[p.kind][1]));
+  if(KINDC[p.kind])parts.push(b(KINDC[p.kind][0],KINDC[p.kind][1]));
   (p.work||[]).forEach(function(w){if(WORK[w])parts.push(b(WORK[w][0],WORK[w][1]))});
   if(Array.isArray(p.countries)&&p.countries.length)parts.push(p.countries.map(function(c){return nm(CTRY,c)}).join(', '));
   if(AV[p.availability])parts.push(b(AV[p.availability][0],AV[p.availability][1]));
@@ -678,7 +681,7 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
   var c=cand||{},p=c.prefs||{};
   $('pv-1').innerHTML=row(b('Ad soyad','Full name'),esc(c.full_name))+row(b('E-posta','Email'),esc(c.email))+row(b('Telefon','Phone'),esc(c.phone))+row(b('Ülke','Country'),esc(c.country))+row(b('Güncel unvan','Current title'),esc(c.headline))+row(b('Deneyim','Experience'),c.years_experience==null?'':esc(c.years_experience)+b(' yıl',' years'))+row(b('Yetkinlikler','Skills'),esc((c.skills||[]).join(', ')));
   var h='';
-  if(KIND[p.kind])h+=row(b('Çalışma şekli','Engagement'),b(KIND[p.kind][0],KIND[p.kind][1]));
+  if(KINDC[p.kind])h+=row(b('Çalışma şekli','Engagement'),b(KINDC[p.kind][0],KINDC[p.kind][1]));
   if((p.work||[]).length)h+=row(b('Çalışma modeli','Work model'),p.work.map(function(w){return WORK[w]?b(WORK[w][0],WORK[w][1]):''}).join(', '));
   if(AV[p.availability])h+=row(b('Müsaitlik','Availability'),b(AV[p.availability][0],AV[p.availability][1]));
   if(Array.isArray(p.countries)&&p.countries.length)h+=row(b('Ülkeler','Countries'),p.countries.map(function(x){return nm(CTRY,x)}).join(', '));
