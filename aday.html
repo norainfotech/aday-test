@@ -243,7 +243,7 @@ details.acct .in{padding-top:18px}
 </nav>
 </header>
 <main>
-<div class="head"><h1><span class="tr">Aday portalı</span><span class="en">Candidate portal</span></h1><p class="sub"><span class="tr">Size uygun ilanları görmek için bilgilerinizi girin.</span><span class="en">Enter your details to see the roles that suit you.</span></p></div>
+<div class="head"><h1><span class="tr">Aday portalı</span><span class="en">Candidate portal</span></h1></div>
 <div class="pt" id="p-load"><p class="ph"><span class="tr">Yükleniyor…</span><span class="en">Loading…</span></p></div>
 <div class="pt" id="p-app" hidden>
 <div class="pt-top"><span class="who" id="who"></span><span class="acts"><button type="button" class="btn2 sm" id="p-open"><span class="tr">Profilim</span><span class="en">My profile</span></button><button type="button" class="btn2 sm" id="logout"><span class="tr">Çıkış</span><span class="en">Sign out</span></button></span></div>
@@ -255,7 +255,7 @@ details.acct .in{padding-top:18px}
 
 <section class="pp" id="s1" hidden aria-labelledby="h1s">
 <h2 id="h1s"><span class="tr">Bilgileriniz</span><span class="en">Your details</span></h2>
-<p class="lead"><span class="tr">CV'nizi yükleyin, temel bilgileri sizin için okuyup dolduralım. Siz kontrol edip düzeltirsiniz.</span><span class="en">Upload your CV and we will read the key details for you. You review and correct them.</span></p>
+<p class="lead"><span class="tr">CV'nizi yükleyin, bilgileri sizin için dolduralım.</span><span class="en">Upload your CV and we will fill in your details.</span></p>
 <div class="dz" id="dz">
 <div id="dz-idle"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
 <h3><span class="tr">CV'nizi yükleyin</span><span class="en">Upload your CV</span></h3>
@@ -287,7 +287,6 @@ details.acct .in{padding-top:18px}
 
 <section class="pp" id="s2" hidden aria-labelledby="h2s">
 <h2 id="h2s"><span class="tr">Tercihleriniz</span><span class="en">Your preferences</span></h2>
-<p class="lead"><span class="tr">Aradığınız rolün özelliklerini seçin.</span><span class="en">Choose what you are looking for.</span></p>
 <form id="f-pref" novalidate>
 <div class="q" role="group"><div class="qt"><span class="tr">Çalışma şekli</span><span class="en">Engagement type</span></div><div class="chs">
 <label class="ch"><input type="checkbox" name="kind" value="contract"><span><span class="tr">Sözleşmeli</span><span class="en">Contract</span></span></label>
@@ -329,16 +328,15 @@ details.acct .in{padding-top:18px}
 
 <section class="pp" id="s3" hidden aria-labelledby="h3s">
 <h2 id="h3s"><span class="tr">Size uygun ilanlar</span><span class="en">Roles suited to you</span></h2>
-<p class="lead"><span class="tr">Tercihlerinize göre her gün güncellenen ilanlar.</span><span class="en">Jobs updated daily based on your preferences.</span></p>
 <div class="sum" id="sum" hidden><span id="sum-t"></span><a id="sum-e"><span class="tr">Tercihleri düzenle</span><span class="en">Edit preferences</span></a></div>
 <div class="note-ok" id="reconsent" hidden><span><span class="tr">Rıza metni güncellendi: onaylı işverenler sizi önce ad/iletişim olmadan görür; ad ve iletişim bilgileriniz yalnızca Nora'nın seçtiği onaylı işverenlere açılır. Kabul etmezseniz işverenler sizi göremez.</span><span class="en">Consent text updated: approved employers first see you without name/contact; your name and contact details are disclosed only to approved employers selected by Nora. Without acceptance, employers cannot see you.</span> <a href="privacy.html#cv-havuzu"><span class="tr">Aydınlatma metni</span><span class="en">Privacy notice</span></a></span><button type="button" class="btn2" id="reconsent-go"><span class="tr">Kabul ediyorum</span><span class="en">I accept</span></button></div>
 <div class="jsearch"><h3 style="margin:0 0 6px;font-size:20px"><span class="tr">İlan ara</span><span class="en">Search roles</span></h3>
-<p class="ph"><span class="tr">Arama ücretsiz. Yapay zekâ analizi, ön yazı ve CV önerisi: günde 5 hak.</span><span class="en">Search is free. AI analysis, cover letter and CV tips: 5 uses a day.</span><span id="aileft"></span></p>
+<p class="ph"><span class="tr">Yapay zekâ analizi, ön yazı ve CV önerisi: günde 5 hak.</span><span class="en">AI analysis, cover letter and CV tips: 5 uses a day.</span><span id="aileft"></span></p>
 <div class="jrow"><input id="jq" maxlength="80" aria-label="Search" data-ph-tr="Boş bırakırsanız profilinizden aranır" data-ph-en="Leave empty to search from your profile" placeholder="Boş bırakırsanız profilinizden aranır"><button type="button" class="btn" id="jgo"><span class="tr">Ara</span><span class="en">Search</span></button><button type="button" class="btn2" id="jcareer"><span class="tr">Kariyer önerisi</span><span class="en">Career suggestions</span></button></div><div class="aiout" id="aicareer" hidden></div>
 <div class="mf" id="mf" hidden><div class="mf-h"><span class="mf-t"><span class="tr">Uyum aralığı</span><span class="en">Match range</span></span><span class="mf-v" id="mf-v"></span></div><div class="rng"><div class="rng-tr"></div><div class="rng-fill" id="rng-fill"></div><input type="range" id="mf-min" min="0" max="100" step="5" value="0" aria-label="Min"><input type="range" id="mf-max" min="0" max="100" step="5" value="100" aria-label="Max"></div><div class="mf-n" id="mf-n"></div></div>
 <p class="msg" id="m-js" role="status" aria-live="polite"></p><div id="jres"></div></div>
 <div id="roles"></div><p class="msg" id="m-roles" role="status" aria-live="polite"></p>
-<div id="s-q" hidden><h2 style="font-size:22px;margin:26px 0 6px"><span class="tr">Sorularımız</span><span class="en">Our questions</span></h2><p class="ph"><span class="tr">Sizi doğru fırsatlarla eşleştirmemize yardımcı olur.</span><span class="en">These help us match you with the right opportunities.</span></p><div id="qs"></div></div>
+<div id="s-q" hidden><h2 style="font-size:22px;margin:26px 0 6px"><span class="tr">Sorularımız</span><span class="en">Our questions</span></h2><div id="qs"></div></div>
 </section>
 
 <section class="pp" id="s4" hidden aria-labelledby="h4s">
@@ -452,7 +450,7 @@ details.acct .in{padding-top:18px}
    if(x.status===401||x.status===403||(x.j&&x.j.message==='not_authenticated')){save(null);toLogin();return}
    if(!x.ok){$('p-load').hidden=true;$('p-app').hidden=false;say('m-up','generic');return}
    cand=(x.j&&x.j.candidate)||null;
-   $('who').textContent=cand?cand.email:jwtMail();
+   $('who').textContent='';
    $('p-load').hidden=true;$('p-app').hidden=false;
    if(!cand){step=1;render();return}
    fillProfile();fillPrefs();
@@ -651,7 +649,7 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
   var f=$('rng-fill');f.style.left=lo+'%';f.style.width=(hi-lo)+'%';
   var list=JOBS.filter(function(j){return j.score>=lo&&j.score<=hi});
   $('mf-n').innerHTML=b(list.length+' / '+JOBS.length+' ilan gösteriliyor',list.length+' of '+JOBS.length+' roles shown');
-  if(!JOBS.length){$('jres').innerHTML='<p class="ph">'+b('Şu an uygun ilan bulunamadı. İlan havuzu her gün güncellenir; farklı bir anahtar sözcük deneyebilir veya tercihlerinizi genişletebilirsiniz.','No matching roles right now. The pool is refreshed daily; try another keyword or widen your preferences.')+'</p>';return}
+  if(!JOBS.length){$('jres').innerHTML='<p class="ph">'+b('Şu an uygun ilan yok. İlanlar her gün güncellenir; farklı bir anahtar sözcük deneyebilirsiniz.','No matching roles right now. Roles refresh daily; try another keyword.')+'</p>';return}
   if(!list.length){$('jres').innerHTML='<p class="ph">'+b('Bu uyum aralığında ilan yok. Aralığı genişletin.','No roles in this range. Widen the range.')+'</p>';return}
   $('jres').innerHTML=list.map(function(j){var ch=[];
    var place=[j.location,j.country].filter(Boolean);if(place.length)ch.push('<span class="chip2">'+esc(place[0]===place[1]?place[0]:place.join(', '))+'</span>');
