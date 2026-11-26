@@ -658,7 +658,7 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
  function hidAdd(id){try{var a=hidSet();a.push(id);localStorage.setItem('nora_hid',JSON.stringify(a.slice(-500)))}catch(e){}}
  var TYP={full_time:['Tam zamanlı','Full-time'],fulltime:['Tam zamanlı','Full-time'],permanent:['Kadrolu','Permanent'],contract:['Sözleşmeli','Contract'],contractor:['Sözleşmeli','Contract'],freelance:['Freelance','Freelance'],part_time:['Yarı zamanlı','Part-time'],parttime:['Yarı zamanlı','Part-time'],internship:['Staj','Internship']};
  function mfRange(){var lo=+$('mf-min').value,hi=+$('mf-max').value;if(lo>hi){var t=lo;lo=hi;hi=t}return [lo,hi]}
-var SEL=null,TAB='sum',LIST=[];
+var SEL=null,TAB='det',LIST=[];
  function chipsOf(j){var ch=[];var place=[j.location,j.country].filter(Boolean);if(place.length)ch.push('<span class="chip2">'+esc(place[0]===place[1]?place[0]:place.join(', '))+'</span>');
    if(j.mode==='remote')ch.push('<span class="chip2 r">'+b('Uzaktan','Remote')+'</span>');else if(j.mode==='hybrid')ch.push('<span class="chip2 h">'+b('Hibrit','Hybrid')+'</span>');else if(j.mode==='onsite')ch.push('<span class="chip2">'+b('Ofiste','On-site')+'</span>');
    if(j.req_years)ch.push('<span class="chip2 y">'+b('En az '+j.req_years+' yıl deneyim','At least '+j.req_years+' yrs experience')+'</span>');
@@ -666,7 +666,7 @@ var SEL=null,TAB='sum',LIST=[];
  function card(j){JBY[j.id]=j;
    return '<div class="jb'+(j.id===SEL?' sel':'')+'" data-id="'+esc(j.id)+'" tabindex="0"><span class="sc2">'+j.score+'% '+b('uyum','match')+'</span><h4>'+esc(j.title)+'</h4><p class="meta">'+esc(j.company||'')+'</p></div>'}
  var PANES={};
- var TABS=[['sum','Özet','Summary'],['det','İlan detayı','Job details'],['compare','Yapay zekâ analizi','AI analysis'],['cover','Ön yazı','Cover letter'],['cv','CV önerisi','CV tips']];
+ var TABS=[['det','İlan detayı','Job details'],['compare','Yapay zekâ analizi','AI analysis'],['cover','Ön yazı','Cover letter'],['cv','CV önerisi','CV tips']];
  function detHtml(j){
   return '<div class="dh"><div class="dtop"><h3>'+esc(j.title)+'</h3><div class="dact">'+(j.apply_url?'<a class="btn2 go" target="_blank" rel="noopener noreferrer" href="'+esc(j.apply_url)+'">'+b('İlana git','Open posting')+' ↗</a>':'')+'<button type="button" class="ic" data-hide="1" title="'+(L()?'Not interested':'İlgilenmiyorum')+'" aria-label="'+(L()?'Not interested':'İlgilenmiyorum')+'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+esc(j.company||'')+'</p><div class="chips2">'+chipsOf(j)+'</div></div>'+
    '<div class="tabs">'+TABS.map(function(t){return '<button type="button" data-t="'+t[0]+'"'+(t[0]===TAB?' class="on"':'')+'>'+b(t[1],t[2])+(t[0]==='sum'||t[0]==='det'?'':'<span class="ai-n" data-m="'+t[0]+'" data-j="'+esc(j.id)+'">'+aiBadge(t[0],j.id)+'</span>')+'</button>'}).join('')+'</div><div class="jp"></div>'}
@@ -695,7 +695,7 @@ var SEL=null,TAB='sum',LIST=[];
    sents(l).forEach(function(z){out.push('<p>'+esc(z)+'</p>')})});
   if(list)out.push('</ul>');flush();return out.join('')}
  function selectJob(id,scroll){
-  SEL=id;TAB='sum';var j=JBY[id];if(!j)return;
+  SEL=id;TAB='det';var j=JBY[id];if(!j)return;
   document.querySelectorAll('#jres .jb').forEach(function(x){x.classList.toggle('sel',x.getAttribute('data-id')===id)});
   var det=$('jdet');det.innerHTML=detHtml(j);det.hidden=false;
   var card=document.querySelector('#jres .jb[data-id="'+id+'"]');
