@@ -217,7 +217,7 @@ details.acct summary::-webkit-details-marker{display:none}details.acct summary::
 details.acct .in{padding-top:18px}
 .pp select{padding:13px 12px;border:1px solid #DDE3EC;border-radius:10px;font:inherit;font-size:16px;color:#0E1B2E;background:#fff}
 .rate{display:flex;gap:10px;max-width:360px}.rate input{flex:1}
-.btn2.sm,.btn.sm{padding:8px 16px;font-size:14px}.jrow{align-items:stretch}.jrow .btn.sm,.sum .btn2.sm{box-sizing:border-box;padding:0 18px;font:500 14px Inter,system-ui,sans-serif;border:1px solid #153A72;justify-content:center;white-space:nowrap}.jrow .btn.sm{width:120px;font-size:15px}.sum .btn2.sm{min-height:38px;min-width:160px}
+.btn2.sm,.btn.sm{padding:8px 16px;font-size:14px}.jrow{align-items:stretch}.jrow .btn.sm,.sum .btn2.sm{box-sizing:border-box;padding:0 18px;font:500 14px Inter,system-ui,sans-serif;border:1px solid #153A72;justify-content:center;white-space:nowrap}.sum .btn2.sm{min-height:38px;padding:0 22px}.jrow .btn.sm{padding:0 22px}
 .pcard{border:1px solid #DDE3EC;border-radius:14px;padding:20px 22px;margin:0 0 16px;background:#fff}
 .ph-t{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px}.ph-t h3{margin:0;font-size:17px;color:#0E1B2E}
 .pv{font-size:15px;color:#3D4859;line-height:1.7}.pv div{display:flex;gap:10px}.pv b{flex:none;width:150px;color:#5B6778;font-weight:500}
@@ -736,6 +736,8 @@ var SEL=null,TAB='sum',LIST=[];
   .catch(function(){busy=false;updGo();$('jres').innerHTML='';say('m-js','network')})}
  $('jq').addEventListener('input',updGo);
  $('jgo').addEventListener('click',doSearch);
+ function syncW(){var c=$('jcareer'),g=$('jgo');if(c&&g){var w=c.offsetWidth;if(w>0)g.style.width=w+'px'}}
+ try{new ResizeObserver(syncW).observe($('jcareer'))}catch(e){}window.addEventListener('resize',syncW);
  $('roles').addEventListener('click',function(e){var t=e.target.closest('button[data-r]');if(!t)return;t.disabled=true;
   rpc('set_my_match',{p_role:t.getAttribute('data-r'),p_status:t.getAttribute('data-s')}).then(function(x){if(x.ok){say('m-roles','saved',true);loadRoles()}else{t.disabled=false;say('m-roles','generic')}})});
  function loadQuestions(){
