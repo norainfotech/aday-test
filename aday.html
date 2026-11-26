@@ -187,6 +187,7 @@ footer span{display:flex;flex-wrap:wrap;gap:24px}
 .jsearch{margin:0 0 26px;padding:0 0 22px;border-bottom:1px solid #E6E9EE}
 .jrow{display:flex;gap:10px;flex-wrap:wrap}.jrow input{flex:1;min-width:220px;padding:13px 14px;border:1px solid #DDE3EC;border-radius:10px;font:inherit;font-size:16px}.jrow .btn{border:0;cursor:pointer;font-family:inherit}.jrow .btn[disabled]{opacity:.45;cursor:default}.prem{margin:14px 0;padding:18px 20px;border-radius:14px;background:linear-gradient(135deg,#0F2A52,#153A72 60%,#2B5BA8);color:#fff;box-shadow:0 8px 24px rgba(21,58,114,.25)}.prem[hidden]{display:none}.prem b{display:block;font-size:17px;margin:8px 0 4px}.prem p{margin:0;opacity:.85;font-size:14px}.prem .pb{display:inline-block;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.18);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
 .jb{border:1px solid #E6E9EE;border-radius:14px;padding:18px 20px;margin:12px 0 0;background:#fff}.jb h4{margin:0 0 4px;font-size:18px}.jb .meta{margin:0 0 10px;color:#5B6778;font-size:14px}
+.jb .jtop{display:grid;grid-template-columns:1fr 230px;gap:18px;align-items:start}.jb .jr{display:flex;flex-direction:column;gap:7px}.jb .jr .btn2{padding:8px 12px;font-size:13.5px;text-align:center;width:100%;box-sizing:border-box}.jb .jr .btn2.on{background:#EEF3FB;border-color:#153A72;color:#153A72}.jb .jr .hide{opacity:.7;border-style:dashed}.jb .jp{max-height:420px;overflow:auto}.exh{margin:26px 0 8px;font-size:17px;color:#153A72}@media(max-width:700px){.jb .jtop{grid-template-columns:1fr}}
 .aibtns{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 0}.aibtns .btn2{padding:9px 16px;font-size:14px}
 .mf{margin:16px 0 4px;padding:16px 18px;border:1px solid #E6E9EE;border-radius:16px;background:linear-gradient(180deg,#fff,#F7F9FC)}.mf-h{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}.mf-t{font-weight:600;font-size:14px;color:#0E1B2E}.mf-v{font-weight:700;font-size:14px;color:#153A72;background:#EEF3FB;border-radius:999px;padding:3px 12px}.mf-n{margin:10px 0 0;font-size:13px;color:#5B6778}
 .rng{position:relative;height:28px}.rng-tr{position:absolute;left:0;right:0;top:12px;height:4px;border-radius:4px;background:#DDE3EC}.rng-fill{position:absolute;top:12px;height:4px;border-radius:4px;background:#153A72}
@@ -436,7 +437,7 @@ details.acct .in{padding-top:18px}
   $('dz').hidden=!!(cand&&cvInfo);
   $('ckrow').hidden=!!(cand&&cvInfo&&!pending&&!replacing);
   if(replacing){$('dz').hidden=false;$('ckrow').hidden=false}
-  if(step===3){loadRoles();if(!autoS){autoS=true;setTimeout(function(){doSearch(true)},50)}}
+  if(step===3){loadRoles();if(!autoS){autoS=true;setTimeout(loadStatus,50)}}
   if(step===4)renderProfile();
  }
  var cvInfo=null,replacing=false;
@@ -622,7 +623,8 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
  function srcName(j){var M={outsourcing:'Nora Outsourcing',arbeitnow:'Arbeitnow',bundesagentur:'Bundesagentur',linkedin:'LinkedIn',kariyer:'Kariyer.net',freelancermap:'Freelancermap',jooble:'Jooble',adzuna:'Adzuna',careerjet:'Careerjet',jsearch:'Google Jobs'};return M[j.source]||'İlan'}
  function chipsK(a){return a.length?a.map(function(x){return '<span class="k">'+esc(x)+'</span>'}).join(''):'<span class="ph">–</span>'}
  function srcName2(){return ''}
- var aiLeft=null,autoS=false,freeLeft=null,lastQ='',busy=false;
+ var aiLeft=null,autoS=false,freeLeft=null,lastQ=null,busy=false;
+ function loadStatus(){ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({status:true})})}).then(function(r){return r.json()}).then(function(j){if(j.free)freeLeft=j.free.premium?null:j.free.left;if(j.ai_left!=null){aiLeft=j.ai_left;showLeft()}updGo()}).catch(function(){})}
  function updGo(){var btn=$('jgo');btn.disabled=busy||freeLeft===0||(freeLeft!=null&&$('jq').value.trim()===lastQ);if(!busy)btn.innerHTML=b('Ara','Search')+(freeLeft!=null?' ('+freeLeft+')':'');$('prem').hidden=freeLeft!==0}
  function showLeft(){var el=$('aileft');if(el)el.innerHTML=aiLeft==null?'':' · '+b('Kalan hak: ','Left today: ')+aiLeft+'/5'}
  function runAI(mode,jid,out,btn){
@@ -640,40 +642,57 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
    out.querySelector('.cp').addEventListener('click',function(){var t=this;try{navigator.clipboard.writeText(x.j.text).then(function(){t.innerHTML=b('Kopyalandı ✓','Copied ✓')})}catch(e){}});
    try{out.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}})
   .catch(function(){done();out.textContent=tx('network')})}
- $('jres').addEventListener('click',function(e){var t=e.target.closest('button[data-ai]');if(!t)return;var box=t.closest('.jb');runAI(t.getAttribute('data-ai'),t.parentNode.getAttribute('data-j'),box.querySelector('.aiout'),t)});
+ $('jres').addEventListener('click',function(e){
+  var box=e.target.closest('.jb');if(!box)return;var id=box.getAttribute('data-id'),pn=box.querySelector('.jp');
+  if(e.target.closest('[data-hide]')){hidAdd(id);drawJobs();return}
+  var t=e.target.closest('button[data-p]');if(!t)return;var k=t.getAttribute('data-p'),j=JBY[id]||{};
+  if(box.getAttribute('data-o')===k){pn.hidden=true;box.setAttribute('data-o','');t.classList.remove('on');return}
+  box.querySelectorAll('button[data-p]').forEach(function(x){x.classList.remove('on')});t.classList.add('on');box.setAttribute('data-o',k);
+  if(k==='str'||k==='gap'){var a=k==='str'?j.strengths:j.gaps;pn.hidden=false;pn.innerHTML='<b>'+(k==='str'?b('Güçlü yönleriniz','Your strengths'):b('Eksik / geliştirilebilir','Gaps'))+'</b><div>'+((a&&a.length)?chipsK(a):'<span class="ph">'+b('Belirtilmemiş','Not specified')+'</span>')+'</div>';return}
+  if(k==='det'){pn.hidden=false;pn.innerHTML='<span class="ph">'+b('Yükleniyor…','Loading…')+'</span>';
+   ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({detail:id})})}).then(function(r){return r.json()}).then(function(x){if(box.getAttribute('data-o')!=='det')return;pn.textContent=x.description||tx('generic')}).catch(function(){pn.textContent=tx('network')});return}
+  runAI(k,id,pn,t)});
  $('jcareer').addEventListener('click',function(){runAI('career',null,$('aicareer'),$('jcareer'))});
- var JOBS=[];
+ var JOBS=[],EXTRA=[],SQ='',JBY={};
+ function hidSet(){try{return JSON.parse(localStorage.getItem('nora_hid')||'[]')}catch(e){return []}}
+ function hidAdd(id){try{var a=hidSet();a.push(id);localStorage.setItem('nora_hid',JSON.stringify(a.slice(-500)))}catch(e){}}
  var TYP={full_time:['Tam zamanlı','Full-time'],fulltime:['Tam zamanlı','Full-time'],permanent:['Kadrolu','Permanent'],contract:['Sözleşmeli','Contract'],contractor:['Sözleşmeli','Contract'],freelance:['Freelance','Freelance'],part_time:['Yarı zamanlı','Part-time'],parttime:['Yarı zamanlı','Part-time'],internship:['Staj','Internship']};
  function mfRange(){var lo=+$('mf-min').value,hi=+$('mf-max').value;if(lo>hi){var t=lo;lo=hi;hi=t}return [lo,hi]}
- function drawJobs(){
-  var r=mfRange(),lo=r[0],hi=r[1];$('mf-v').textContent='%'+lo+' – %'+hi;
-  var f=$('rng-fill');f.style.left=lo+'%';f.style.width=(hi-lo)+'%';
-  var list=JOBS.filter(function(j){return j.score>=lo&&j.score<=hi});
-  $('mf-n').innerHTML=b(list.length+' / '+JOBS.length+' ilan gösteriliyor',list.length+' of '+JOBS.length+' roles shown');
-  if(!JOBS.length){$('jres').innerHTML='<p class="ph">'+b('Şu an uygun ilan yok. İlanlar her gün güncellenir; farklı bir anahtar sözcük deneyebilirsiniz.','No matching roles right now. Roles refresh daily; try another keyword.')+'</p>';return}
-  if(!list.length){$('jres').innerHTML='<p class="ph">'+b('Bu uyum aralığında ilan yok. Aralığı genişletin.','No roles in this range. Widen the range.')+'</p>';return}
-  $('jres').innerHTML=list.map(function(j){var ch=[];
+function card(j){var ch=[];JBY[j.id]=j;
    var place=[j.location,j.country].filter(Boolean);if(place.length)ch.push('<span class="chip2">'+esc(place[0]===place[1]?place[0]:place.join(', '))+'</span>');
    if(j.mode==='remote')ch.push('<span class="chip2 r">'+b('Uzaktan','Remote')+'</span>');else if(j.mode==='hybrid')ch.push('<span class="chip2 h">'+b('Hibrit','Hybrid')+'</span>');else if(j.mode==='onsite')ch.push('<span class="chip2">'+b('Ofiste','On-site')+'</span>');
    if(j.req_years)ch.push('<span class="chip2 y">'+b('En az '+j.req_years+' yıl deneyim','At least '+j.req_years+' yrs experience')+'</span>');
    var ty=j.type&&TYP[String(j.type).toLowerCase().replace(/[\\s-]/g,'_')];if(ty)ch.push('<span class="chip2">'+b(ty[0],ty[1])+'</span>');
-   return '<div class="jb"><span class="sc2">'+j.score+'% '+b('uyum','match')+'</span><h4>'+esc(j.title)+'</h4><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+esc(j.company||'')+'</p>'+(ch.length?'<div class="chips2">'+ch.join('')+'</div>':'')+
-    '<div class="cmp"><div class="g"><b>'+b('Güçlü yönleriniz','Your strengths')+'</b>'+chipsK(j.strengths||[])+'</div><div class="w"><b>'+b('Eksik / geliştirilebilir','Gaps')+'</b>'+chipsK(j.gaps||[])+'</div></div>'+
-    (j.apply_url?'<a class="btn2" target="_blank" rel="noopener noreferrer" href="'+esc(j.apply_url)+'">'+b('İlana git','Open posting')+'</a>':'')+'<div class="aibtns" data-j="'+esc(j.id)+'"><button type="button" class="btn2" data-ai="compare">'+b('Yapay zekâ analizi','AI analysis')+'</button><button type="button" class="btn2" data-ai="cover">'+b('Ön yazı','Cover letter')+'</button><button type="button" class="btn2" data-ai="cv">'+b('CV önerisi','CV tips')+'</button></div><div class="aiout" hidden></div></div>'}).join('')}
+   return '<div class="jb" data-id="'+esc(j.id)+'"><div class="jtop"><div class="jl"><span class="sc2">'+j.score+'% '+b('uyum','match')+'</span><h4>'+esc(j.title)+'</h4><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+esc(j.company||'')+'</p>'+(ch.length?'<div class="chips2">'+ch.join('')+'</div>':'')+'</div>'+
+    '<div class="jr"><button type="button" class="btn2" data-p="str">'+b('Güçlü yönler','Strengths')+'</button><button type="button" class="btn2" data-p="gap">'+b('Eksikler','Gaps')+'</button><button type="button" class="btn2" data-p="det">'+b('İlan detayı','Job details')+'</button><button type="button" class="btn2" data-p="compare">'+b('Yapay zekâ analizi','AI analysis')+'</button><button type="button" class="btn2" data-p="cover">'+b('Ön yazı','Cover letter')+'</button><button type="button" class="btn2" data-p="cv">'+b('CV önerisi','CV tips')+'</button>'+
+    (j.apply_url?'<a class="btn2" target="_blank" rel="noopener noreferrer" href="'+esc(j.apply_url)+'">'+b('İlana git','Open posting')+'</a>':'')+'<button type="button" class="btn2 hide" data-hide="1">'+b('İlgilenmiyorum','Not interested')+'</button></div></div><div class="jp aiout" hidden></div></div>'}
+ function drawJobs(){
+  var r=mfRange(),lo=r[0],hi=r[1];$('mf-v').textContent='%'+lo+' – %'+hi;
+  var f=$('rng-fill');f.style.left=lo+'%';f.style.width=(hi-lo)+'%';
+  var hid=hidSet(),ok=function(j){return j.score>=lo&&j.score<=hi&&hid.indexOf(j.id)<0};
+  var list=JOBS.filter(ok),ex=EXTRA.filter(ok);
+  $('mf-n').innerHTML=b((list.length+ex.length)+' ilan gösteriliyor',(list.length+ex.length)+' roles shown');
+  if(!JOBS.length&&!EXTRA.length){$('jres').innerHTML='<p class="ph">'+b('Şu an uygun ilan yok. İlanlar her gün güncellenir; farklı bir anahtar sözcük deneyebilirsiniz.','No matching roles right now. Roles refresh daily; try another keyword.')+'</p>';return}
+  var h='';
+  if(SQ&&!list.length)h+='<p class="ph">'+b('Aramanızla eşleşen ilan yok.','Nothing matched your search.')+'</p>';
+  h+=list.map(card).join('');
+  if(ex.length)h+='<h3 class="exh">'+b('CV’nize göre ilanlar','Roles based on your CV')+'</h3>'+ex.map(card).join('');
+  if(!list.length&&!ex.length&&!h)h='<p class="ph">'+b('Bu uyum aralığında ilan yok. Aralığı genişletin.','No roles in this range. Widen the range.')+'</p>';
+  $('jres').innerHTML=h}
  ['mf-min','mf-max'].forEach(function(id){$(id).addEventListener('input',drawJobs)});
- function doSearch(auto){
+ function doSearch(){
   var btn=$('jgo'),q=$('jq').value.trim();busy=true;btn.disabled=true;btn.innerHTML=b('Aranıyor…','Searching…');say('m-js','');$('jres').innerHTML='<p class="ph">'+b('Aranıyor…','Searching…')+'</p>';
-  ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({query:q,auto:auto===true})})})
+  ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({query:q})})})
   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,status:r.status,j:j}})})
   .then(function(x){busy=false;if(x.j&&x.j.ai_left!=null){aiLeft=x.j.ai_left;showLeft()}
    if(x.j&&x.j.free){freeLeft=x.j.free.premium?null:x.j.free.left}
    if(x.status===402){$('jres').innerHTML='';freeLeft=0;updGo();return}
    if(x.status===429){$('jres').innerHTML='';say('m-js','daily_limit');updGo();return}
    if(!x.ok){$('jres').innerHTML='';say('m-js','generic');updGo();return}
-   lastQ=q;updGo();JOBS=x.j.jobs||[];$('mf').hidden=!JOBS.length;drawJobs()})
+   lastQ=q;updGo();JOBS=x.j.jobs||[];EXTRA=x.j.extra||[];SQ=q;$('mf').hidden=!(JOBS.length||EXTRA.length);drawJobs()})
   .catch(function(){busy=false;updGo();$('jres').innerHTML='';say('m-js','network')})}
  $('jq').addEventListener('input',updGo);
- $('jgo').addEventListener('click',function(){doSearch(false)});
+ $('jgo').addEventListener('click',doSearch);
  $('roles').addEventListener('click',function(e){var t=e.target.closest('button[data-r]');if(!t)return;t.disabled=true;
   rpc('set_my_match',{p_role:t.getAttribute('data-r'),p_status:t.getAttribute('data-s')}).then(function(x){if(x.ok){say('m-roles','saved',true);loadRoles()}else{t.disabled=false;say('m-roles','generic')}})});
  function loadQuestions(){
