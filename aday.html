@@ -660,7 +660,7 @@ var SEL=null,TAB='sum',LIST=[];
    if(j.req_years)ch.push('<span class="chip2 y">'+b('En az '+j.req_years+' yıl deneyim','At least '+j.req_years+' yrs experience')+'</span>');
    var ty=j.type&&TYP[String(j.type).toLowerCase().replace(/[\\s-]/g,'_')];if(ty)ch.push('<span class="chip2">'+b(ty[0],ty[1])+'</span>');return ch.join('')}
  function card(j){JBY[j.id]=j;
-   return '<div class="jb'+(j.id===SEL?' sel':'')+'" data-id="'+esc(j.id)+'" tabindex="0"><span class="sc2">'+j.score+'% '+b('uyum','match')+'</span><h4>'+esc(j.title)+'</h4><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+esc(j.company||'')+'</p></div>'}
+   return '<div class="jb'+(j.id===SEL?' sel':'')+'" data-id="'+esc(j.id)+'" tabindex="0"><span class="sc2">'+j.score+'% '+b('uyum','match')+'</span><h4>'+esc(j.title)+'</h4><p class="meta">'+esc(j.company||'')+'</p></div>'}
  var PANES={};
  var TABS=[['sum','Özet','Summary'],['compare','Yapay zekâ analizi','AI analysis'],['cover','Ön yazı','Cover letter'],['cv','CV önerisi','CV tips']];
  function detHtml(j){
