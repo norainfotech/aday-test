@@ -329,7 +329,7 @@ details.acct .in{padding-top:18px}
 <div class="sum" id="sum" hidden><span id="sum-t"></span><a id="sum-e"><span class="tr">Tercihleri düzenle</span><span class="en">Edit preferences</span></a></div>
 <div class="note-ok" id="reconsent" hidden><span><span class="tr">Rıza metni güncellendi: onaylı işverenler sizi önce ad/iletişim olmadan görür; ad ve iletişim bilgileriniz yalnızca Nora'nın seçtiği onaylı işverenlere açılır. Kabul etmezseniz işverenler sizi göremez.</span><span class="en">Consent text updated: approved employers first see you without name/contact; your name and contact details are disclosed only to approved employers selected by Nora. Without acceptance, employers cannot see you.</span> <a href="privacy.html#cv-havuzu"><span class="tr">Aydınlatma metni</span><span class="en">Privacy notice</span></a></span><button type="button" class="btn2" id="reconsent-go"><span class="tr">Kabul ediyorum</span><span class="en">I accept</span></button></div>
 <div class="jsearch"><h3 style="margin:0 0 6px;font-size:20px"><span class="tr">İlan ara</span><span class="en">Search roles</span></h3>
-<p class="ph"><span class="tr">Arama ücretsiz. Yapay zekâ analizi, ön yazı ve CV önerisi: günde 5 hak.</span><span class="en">Search is free. AI analysis, cover letter and CV tips: 5 uses a day.</span></p>
+<p class="ph"><span class="tr">Arama ücretsiz. Yapay zekâ analizi, ön yazı ve CV önerisi: günde 5 hak.</span><span class="en">Search is free. AI analysis, cover letter and CV tips: 5 uses a day.</span><span id="aileft"></span></p>
 <div class="jrow"><input id="jq" maxlength="80" aria-label="Search" placeholder="Boş bırakırsanız profilinizden aranır / Leave empty to use your profile"><button type="button" class="btn" id="jgo"><span class="tr">Ara</span><span class="en">Search</span></button><button type="button" class="btn2" id="jcareer"><span class="tr">Kariyer önerisi</span><span class="en">Career suggestions</span></button></div><div class="aiout" id="aicareer" hidden></div>
 <p class="msg" id="m-js" role="status" aria-live="polite"></p><div id="jres"></div></div>
 <div id="roles"></div><p class="msg" id="m-roles" role="status" aria-live="polite"></p>
@@ -432,7 +432,7 @@ details.acct .in{padding-top:18px}
   $('dz').hidden=!!(cand&&cvInfo);
   $('ckrow').hidden=!!(cand&&cvInfo&&!pending&&!replacing);
   if(replacing){$('dz').hidden=false;$('ckrow').hidden=false}
-  if(step===3)loadRoles();
+  if(step===3){loadRoles();if(!autoS){autoS=true;setTimeout(doSearch,50)}}
   if(step===4)renderProfile();
  }
  var cvInfo=null,replacing=false;
@@ -615,34 +615,43 @@ function syncTrv(){var f=$('f-pref'),d=f.querySelector('input[name=tdom]:checked
      if(st!=='interested')act+='<button type="button" class="btn2" data-r="'+esc(r.id)+'" data-s="interested">'+b('İlgileniyorum','I am interested')+'</button>';
      if(st!=='declined')act+='<button type="button" class="btn2" data-r="'+esc(r.id)+'" data-s="declined">'+b('İlgilenmiyorum','Not interested')+'</button>'}
     return '<div class="role"><h3>'+esc(r.title)+'</h3><p class="meta">'+meta.join(' · ')+'</p>'+(chips?'<div class="chips">'+chips+'</div>':'')+'<div class="acts">'+act+'</div></div>'}).join('')})}
- function srcName(j){return j.source==='outsourcing'?'Nora Outsourcing':(j.source==='arbeitnow'?'Arbeitnow':(j.source==='bundesagentur'?'Bundesagentur':'Google Jobs / LinkedIn'))}
+ function srcName(j){var M={outsourcing:'Nora Outsourcing',arbeitnow:'Arbeitnow',bundesagentur:'Bundesagentur',linkedin:'LinkedIn',kariyer:'Kariyer.net',freelancermap:'Freelancermap',jooble:'Jooble',adzuna:'Adzuna',careerjet:'Careerjet',jsearch:'Google Jobs'};return M[j.source]||'İlan'}
  function chipsK(a){return a.length?a.map(function(x){return '<span class="k">'+esc(x)+'</span>'}).join(''):'<span class="ph">–</span>'}
  function srcName2(){return ''}
+ var aiLeft=null,autoS=false;
+ function showLeft(){var el=$('aileft');if(el)el.innerHTML=aiLeft==null?'':' · '+b('Kalan hak: ','Left today: ')+aiLeft+'/5'}
  function runAI(mode,jid,out,btn){
-  btn.disabled=true;out.hidden=false;out.textContent='…';
+  var old=btn.innerHTML;btn.disabled=true;btn.innerHTML=b('Hazırlanıyor… (~10 sn)','Working… (~10 s)');
+  out.hidden=false;out.innerHTML='<span class="ph">'+b('Yapay zekâ çalışıyor, lütfen bekleyin…','AI is working, please wait…')+'</span>';
+  try{out.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){}
+  function done(){btn.disabled=false;btn.innerHTML=old}
   ensure().then(function(){return fetch(SB+'/functions/v1/analyze-job',{method:'POST',headers:hdr(),body:JSON.stringify({mode:mode,job_id:jid,lang:L()?'en':'tr'})})})
   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,j:j}})})
-  .then(function(x){btn.disabled=false;
+  .then(function(x){done();
    if(!x.ok){out.textContent=tx((x.j&&x.j.error)||'generic');return}
-   out.innerHTML='<div class="ai-h"><span>'+b('Yapay zekâ taslağıdır; göndermeden önce kontrol edin.','AI draft; please review before using.')+'</span></div>';
-   out.appendChild(document.createTextNode(x.j.text))})
-  .catch(function(){btn.disabled=false;out.textContent=tx('network')})}
+   if(aiLeft!=null&&!x.j.cached){aiLeft=Math.max(0,aiLeft-1);showLeft()}
+   out.innerHTML='<div class="ai-h"><span>'+b('Yapay zekâ taslağıdır; kullanmadan önce kontrol edin.','AI draft; please review before using.')+'</span><button type="button" class="btn2 sm cp">'+b('Kopyala','Copy')+'</button></div>';
+   out.appendChild(document.createTextNode(x.j.text));
+   out.querySelector('.cp').addEventListener('click',function(){var t=this;try{navigator.clipboard.writeText(x.j.text).then(function(){t.innerHTML=b('Kopyalandı ✓','Copied ✓')})}catch(e){}});
+   try{out.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(e){}})
+  .catch(function(){done();out.textContent=tx('network')})}
  $('jres').addEventListener('click',function(e){var t=e.target.closest('button[data-ai]');if(!t)return;var box=t.closest('.jb');runAI(t.getAttribute('data-ai'),t.parentNode.getAttribute('data-j'),box.querySelector('.aiout'),t)});
  $('jcareer').addEventListener('click',function(){runAI('career',null,$('aicareer'),$('jcareer'))});
- $('jgo').addEventListener('click',function(){
-  var btn=$('jgo'),q=$('jq').value.trim();btn.disabled=true;say('m-js','');$('jres').innerHTML='<p class="ph">'+b('Aranıyor…','Searching…')+'</p>';
+ function doSearch(){
+  var btn=$('jgo'),q=$('jq').value.trim();btn.disabled=true;btn.innerHTML=b('Aranıyor…','Searching…');say('m-js','');$('jres').innerHTML='<p class="ph">'+b('Aranıyor…','Searching…')+'</p>';
   ensure().then(function(){return fetch(SB+'/functions/v1/search-jobs',{method:'POST',headers:hdr(),body:JSON.stringify({query:q})})})
   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,status:r.status,j:j}})})
-  .then(function(x){btn.disabled=false;
+  .then(function(x){btn.disabled=false;btn.innerHTML=b('Ara','Search');if(x.j&&x.j.ai_left!=null){aiLeft=x.j.ai_left;showLeft()}
    if(x.status===429){$('jres').innerHTML='';say('m-js','daily_limit');return}
    if(!x.ok){$('jres').innerHTML='';say('m-js','generic');return}
    var jobs=x.j.jobs||[];
    if(!jobs.length){$('jres').innerHTML='<p class="ph">'+b('Şu an uygun ilan bulunamadı. İlan havuzu her gün güncellenir; farklı bir anahtar sözcük deneyebilir veya tercihlerinizi genişletebilirsiniz.','No matching roles right now. The pool is refreshed daily; try another keyword or widen your preferences.')+'</p>';return}
    $('jres').innerHTML=jobs.map(function(j){var meta=[j.company,j.location||j.country].filter(Boolean).map(esc);if(j.remote)meta.push(b('Uzaktan','Remote'));
-    return '<div class="jb"><span class="sc2">'+j.score+'%</span><h4>'+esc(j.title)+'</h4><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+meta.join(' · ')+'</p>'+
+    return '<div class="jb"><span class="sc2">'+j.score+'% '+b('uyum','match')+'</span><h4>'+esc(j.title)+'</h4><p class="meta"><span class="src">'+esc(srcName(j))+'</span>'+meta.join(' · ')+'</p>'+
      '<div class="cmp"><div class="g"><b>'+b('Güçlü yönleriniz','Your strengths')+'</b>'+chipsK(j.strengths||[])+'</div><div class="w"><b>'+b('Eksik / geliştirilebilir','Gaps')+'</b>'+chipsK(j.gaps||[])+'</div></div>'+
-     (j.apply_url?'<a class="btn2" target="_blank" rel="noopener noreferrer" href="'+esc(j.apply_url)+'">'+b('İlana git','Open posting')+'</a>':'<span class="st">'+b('Başvuru için Outsourcing ekibiyle iletişime geçeceğiz','The Outsourcing team will contact you')+'</span>')+'<div class="aibtns" data-j="'+esc(j.id)+'"><button type="button" class="btn2" data-ai="compare">'+b('Yapay zekâ analizi','AI analysis')+'</button><button type="button" class="btn2" data-ai="cover">'+b('Ön yazı','Cover letter')+'</button><button type="button" class="btn2" data-ai="cv">'+b('CV önerisi','CV tips')+'</button></div><div class="aiout" hidden></div></div>'}).join('')})
-  .catch(function(){btn.disabled=false;$('jres').innerHTML='';say('m-js','network')})});
+     (j.apply_url?'<a class="btn2" target="_blank" rel="noopener noreferrer" href="'+esc(j.apply_url)+'">'+b('İlana git','Open posting')+'</a>':'')+'<div class="aibtns" data-j="'+esc(j.id)+'"><button type="button" class="btn2" data-ai="compare">'+b('Yapay zekâ analizi','AI analysis')+'</button><button type="button" class="btn2" data-ai="cover">'+b('Ön yazı','Cover letter')+'</button><button type="button" class="btn2" data-ai="cv">'+b('CV önerisi','CV tips')+'</button></div><div class="aiout" hidden></div></div>'}).join('')})
+  .catch(function(){btn.disabled=false;btn.innerHTML=b('Ara','Search');$('jres').innerHTML='';say('m-js','network')})}
+ $('jgo').addEventListener('click',doSearch);
  $('roles').addEventListener('click',function(e){var t=e.target.closest('button[data-r]');if(!t)return;t.disabled=true;
   rpc('set_my_match',{p_role:t.getAttribute('data-r'),p_status:t.getAttribute('data-s')}).then(function(x){if(x.ok){say('m-roles','saved',true);loadRoles()}else{t.disabled=false;say('m-roles','generic')}})});
  function loadQuestions(){
