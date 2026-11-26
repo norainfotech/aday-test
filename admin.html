@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Nora Yönetim</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f5f6f8;color:#1c2330}
+.w{max-width:1150px;margin:0 auto;padding:24px 18px 80px}h1{font-size:22px;margin:0 0 4px}h2{font-size:17px;margin:0 0 12px}
+.card{background:#fff;border:1px solid #e3e6ec;border-radius:12px;padding:18px;margin:0 0 18px}
+input,select,button,textarea{font:inherit}input,select,textarea{border:1px solid #cfd5df;border-radius:8px;padding:8px 10px;background:#fff}
+button{border:0;border-radius:8px;padding:9px 16px;background:#1c2f5a;color:#fff;cursor:pointer}button.sec{background:#e8ecf3;color:#1c2330}button.red{background:#fff;color:#b3261e;border:1px solid #e3b8b4}
+button:disabled{opacity:.5;cursor:default}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.sp{flex:1}
+.muted{color:#667085;font-size:13px}.msg{margin-top:8px;font-size:14px}.err{color:#b3261e}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #eef0f4;vertical-align:top;font-size:14px}th{font-size:12px;color:#667085;text-transform:uppercase;letter-spacing:.03em}
+.chip{display:inline-block;background:#eef2fa;border-radius:20px;padding:1px 9px;margin:1px 2px 1px 0;font-size:12px}.tag{font-size:11px;border-radius:5px;padding:1px 6px;background:#fff3d6;color:#7a5200}.tag.p{background:#e0f3e6;color:#17613a}
+.sc{font-weight:700;font-size:16px}.sc.h{color:#17613a}.sc.m{color:#9a6a00}.sc.l{color:#667085}
+.hide{display:none!important}a{color:#1c4fd6}
+.dz{border:2px dashed #cfd5df;border-radius:10px;padding:18px;text-align:center;color:#667085}.dz.on{border-color:#1c2f5a;background:#f0f4fb}
+.bar{height:6px;background:#e3e6ec;border-radius:4px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:#1c2f5a;width:0}
+dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog::backdrop{background:rgba(0,0,0,.35)}dialog label{display:block;margin:10px 0 3px;font-size:13px;color:#667085}dialog input,dialog textarea{width:100%}
+</style></head><body><div class="w">
+
+<div id="login" class="card" style="max-width:420px;margin:60px auto">
+ <h1>Nora Yönetim</h1><p class="muted">Yalnızca yetkili hesap. E-postana gelen kodla giriş yap.</p>
+ <div id="s1"><input id="em" type="email" placeholder="E-posta" style="width:100%" value="keremuzlu@gmail.com"><div class="row" style="margin-top:10px"><button id="send">Kod gönder</button></div></div>
+ <div id="s2" class="hide"><input id="cd" inputmode="numeric" autocomplete="one-time-code" placeholder="E-postadaki kod" style="width:100%"><div class="row" style="margin-top:10px"><button id="ver">Giriş</button><button class="sec" id="back">Geri</button></div></div>
+ <div class="msg" id="lm"></div>
+</div>
+
+<div id="app" class="hide">
+ <div class="row" style="margin-bottom:14px"><div><h1>Nora Yönetim</h1><div class="muted" id="who"></div></div><div class="sp"></div><button class="sec" id="out">Çıkış</button></div>
+
+ <div class="card"><h2>1. CV yükle</h2>
+  <div class="dz" id="dz">PDF veya Word (.docx) dosyalarını buraya bırak ya da <button class="sec" id="pick" style="padding:5px 12px">seç</button> — tek tek veya toplu, en fazla 8 MB<input id="fi" type="file" multiple accept=".pdf,.docx" class="hide"></div>
+  <div class="bar hide" id="ub"><i id="ubi"></i></div><div class="msg muted" id="um"></div>
+ </div>
+
+ <div class="card"><h2>2. Uyum taraması</h2>
+  <div class="row">
+   <label>Uyum puanı <input id="mn" type="number" min="0" max="100" value="60" style="width:70px"> – <input id="mx" type="number" min="0" max="100" value="100" style="width:70px"></label>
+   <label>Kapsam <select id="sc"><option value="all">Tüm CV'ler (portaldakiler dahil)</option><option value="admin">Yalnız yüklediklerim</option></select></label>
+   <button id="scan">Toplu tara</button><span class="muted" id="sm"></span>
+  </div>
+  <p class="muted" style="margin:10px 0 0">Puan, CV becerileri ile ilan becerilerinin örtüşmesine göre hesaplanır; kıdem, dil ve SAP modülü uyumsuzlukları baştan elenir. İlanlar mevcut veritabanından gelir (son 30 gün). Her CV için en iyi 8 ilan gösterilir.</p>
+ </div>
+
+ <div class="card"><h2>Sonuçlar <span class="muted" id="rt"></span></h2><div id="res" class="muted">Henüz tarama yapılmadı.</div></div>
+
+ <div class="card"><h2>CV'ler <span class="muted" id="ct"></span></h2><div id="list"></div></div>
+</div>
+
+<dialog id="dlg"><h2>CV bilgilerini düzenle</h2>
+ <label>Ad soyad</label><input id="e_n"><label>Başlık</label><input id="e_h"><label>Deneyim (yıl)</label><input id="e_y" type="number" min="0" max="60">
+ <label>Ülke</label><input id="e_c"><label>Diller (virgülle: tr,en,de)</label><input id="e_l"><label>Beceriler (virgülle)</label><textarea id="e_s" rows="3"></textarea><label>Not</label><input id="e_o">
+ <div class="row" style="margin-top:14px"><button id="e_ok">Kaydet</button><button class="sec" id="e_no">Vazgeç</button></div></dialog>
+</div>
+<script>
+var SB='https://fulwkbmmsobyecelmqdj.supabase.co',KEY='sb_publishable_a13BN32K4vLsLhluf2o19w_5hTf50_m',SK='nora-admin',sess=null,CVS=[];
+function $(i){return document.getElementById(i)}
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+try{sess=JSON.parse(localStorage.getItem(SK))}catch(e){}
+function save(s){sess=s;try{s?localStorage.setItem(SK,JSON.stringify(s)):localStorage.removeItem(SK)}catch(e){}}
+function mk(j){return {access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600)}}
+function ensure(){if(sess&&sess.refresh_token&&sess.expires_at-Date.now()/1000<60)return fetch(SB+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:sess.refresh_token})}).then(function(r){return r.json()}).then(function(j){save(j.access_token?mk(j):null)}).catch(function(){});return Promise.resolve()}
+function call(body){return ensure().then(function(){if(!sess)throw new Error('auth');return fetch(SB+'/functions/v1/admin-api',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',Authorization:'Bearer '+sess.access_token},body:JSON.stringify(body)})}).then(function(r){return r.json().then(function(j){j._s=r.status;return j})})}
+function lm(t,e){$('lm').textContent=t||'';$('lm').className='msg'+(e?' err':'')}
+function show(app){$('login').classList.toggle('hide',app);$('app').classList.toggle('hide',!app)}
+
+$('send').onclick=function(){var em=$('em').value.trim().toLowerCase();if(!em)return;lm('Gönderiliyor…');
+ fetch(SB+'/auth/v1/otp',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email:em,create_user:false})}).then(function(r){if(!r.ok)throw 0;$('s1').classList.add('hide');$('s2').classList.remove('hide');lm('Kod e-postana gönderildi.')}).catch(function(){lm('Kod gönderilemedi.',1)})};
+$('back').onclick=function(){$('s2').classList.add('hide');$('s1').classList.remove('hide');lm('')};
+$('ver').onclick=function(){var em=$('em').value.trim().toLowerCase(),t=$('cd').value.trim();if(!t)return;lm('Doğrulanıyor…');
+ fetch(SB+'/auth/v1/verify',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({type:'email',email:em,token:t})}).then(function(r){return r.json()}).then(function(j){if(!j.access_token)throw 0;save(mk(j));start()}).catch(function(){lm('Kod hatalı veya süresi dolmuş.',1)})};
+$('out').onclick=function(){save(null);show(false);$('s2').classList.add('hide');$('s1').classList.remove('hide');lm('')};
+
+function start(){call({action:'ping'}).then(function(j){
+ if(j._s===403){save(null);show(false);lm('Bu hesabın yönetim yetkisi yok.',1);return}
+ if(!j.ok){save(null);show(false);lm('Oturum geçersiz, tekrar giriş yap.',1);return}
+ $('who').textContent=j.email;show(true);load()}).catch(function(){save(null);show(false)})}
+
+function chips(a){return (a||[]).slice(0,12).map(function(s){return '<span class="chip">'+esc(s)+'</span>'}).join('')}
+function load(){return call({action:'list'}).then(function(j){CVS=j.cvs||[];draw()})}
+function draw(){var a=CVS.filter(function(c){return c.src==='admin'}).length;$('ct').textContent='('+a+' yüklenen, '+(CVS.length-a)+' portal)';
+ if(!CVS.length){$('list').innerHTML='<div class="muted">Henüz CV yok.</div>';return}
+ $('list').innerHTML='<table><tr><th>Kişi</th><th>Başlık</th><th>Yıl</th><th>Beceriler</th><th></th></tr>'+CVS.map(function(c){
+  return '<tr><td><b>'+esc(c.full_name||c.file_name||'—')+'</b><br><span class="tag'+(c.src==='portal'?' p':'')+'">'+(c.src==='portal'?'portal':'yüklenen')+'</span> <span class="muted">'+esc(c.country||'')+'</span></td><td>'+esc(c.headline||'')+'</td><td>'+(c.years_experience==null?'':esc(c.years_experience))+'</td><td>'+chips(c.skills)+'</td><td style="white-space:nowrap">'
+  +'<button class="sec" data-a="find" data-i="'+esc(c.id)+'">İlan bul</button> <button class="sec" data-a="cv" data-i="'+esc(c.id)+'">CV</button>'
+  +(c.src==='admin'?' <button class="sec" data-a="edit" data-i="'+esc(c.id)+'">Düzenle</button> <button class="red" data-a="del" data-i="'+esc(c.id)+'">Sil</button>':'')+'</td></tr>'}).join('')+'</table>'}
+function byId(i){return CVS.filter(function(c){return c.id===i})[0]}
+$('list').onclick=function(e){var b=e.target.closest('button');if(!b)return;var i=b.getAttribute('data-i'),a=b.getAttribute('data-a'),c=byId(i);
+ if(a==='find')find(c);
+ if(a==='cv'){var w=window.open('','_blank');call({action:'cvlink',id:i}).then(function(j){if(j.url&&w)w.location=j.url;else if(w){w.close();alert('CV dosyası bulunamadı.')}})}
+ if(a==='del'&&confirm((c.full_name||c.file_name)+' silinsin mi? Dosya da kalıcı silinir.'))call({action:'delete',id:i}).then(load);
+ if(a==='edit'){$('e_n').value=c.full_name||'';$('e_h').value=c.headline||'';$('e_y').value=c.years_experience==null?'':c.years_experience;$('e_c').value=c.country||'';$('e_l').value=(c.langs||[]).join(',');$('e_s').value=(c.skills||[]).join(', ');$('e_o').value=c.note||'';$('dlg').setAttribute('data-i',i);$('dlg').showModal()}};
+$('e_no').onclick=function(){$('dlg').close()};
+$('e_ok').onclick=function(){var y=$('e_y').value.trim();call({action:'update',id:$('dlg').getAttribute('data-i'),fields:{full_name:$('e_n').value,headline:$('e_h').value,years_experience:y===''?null:parseInt(y,10),country:$('e_c').value,langs:$('e_l').value.split(','),skills:$('e_s').value.split(','),note:$('e_o').value}}).then(function(){$('dlg').close();load()})};
+
+function rng(){var a=parseInt($('mn').value,10),b=parseInt($('mx').value,10);if(isNaN(a))a=60;if(isNaN(b))b=100;return {min:a,max:b}}
+function scc(s){return s>=75?'h':s>=60?'m':'l'}
+function table(rows,withCv){return '<table><tr><th>Puan</th>'+(withCv?'<th>CV</th>':'')+'<th>İlan</th><th>Eşleşen beceriler</th></tr>'+rows.map(function(p){
+ return '<tr><td><span class="sc '+scc(p.score)+'">'+p.score+'</span></td>'+(withCv?'<td><b>'+esc(p.cv_name||'—')+'</b><br><span class="muted">'+esc(p.cv_headline||'')+'</span></td>':'')
+ +'<td><b>'+esc(p.title)+'</b><br><span class="muted">'+esc([p.company,p.location,p.source].filter(Boolean).join(' · '))+'</span>'+(p.apply_url?'<br><a href="'+esc(p.apply_url)+'" target="_blank" rel="noopener">İlana git</a>':'')+'</td><td>'+chips(p.strengths)+'</td></tr>'}).join('')+'</table>'}
+function find(c){var r=rng();$('res').innerHTML='<span class="muted">Aranıyor…</span>';$('rt').textContent='';window.scrollTo({top:$('res').offsetTop-80,behavior:'smooth'});
+ call({action:'match',id:c.id,min:r.min,max:r.max}).then(function(j){if(!j.jobs)throw 0;$('rt').textContent='— '+(c.full_name||c.file_name)+': '+j.jobs.length+' ilan ('+r.min+'–'+r.max+'), taranan ilan: '+j.total_jobs;$('res').innerHTML=j.jobs.length?table(j.jobs,false):'<span class="muted">Bu aralıkta ilan yok.</span>'}).catch(function(){$('res').innerHTML='<span class="err">Arama başarısız.</span>'})}
+$('scan').onclick=function(){var r=rng();$('scan').disabled=true;$('sm').textContent='Taranıyor…';
+ call({action:'scan',min:r.min,max:r.max,scope:$('sc').value}).then(function(j){if(!j.pairs)throw 0;$('sm').textContent='';$('rt').textContent='— '+j.cv_count+' CV × '+j.total_jobs+' ilan, '+j.pairs.length+' çift ('+r.min+'–'+r.max+')'+(j.truncated?' · ilk 400 gösteriliyor':'');
+  $('res').innerHTML=j.pairs.length?table(j.pairs,true):'<span class="muted">Bu aralıkta eşleşme yok. Alt sınırı düşürmeyi dene.</span>'}).catch(function(){$('sm').textContent='Tarama başarısız.'}).then(function(){$('scan').disabled=false})};
+
+function rd(f){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(String(r.result).split(',')[1])};r.onerror=no;r.readAsDataURL(f)})}
+async function up(files){files=[].slice.call(files);var ok=0,bad=[];$('ub').classList.remove('hide');
+ for(var i=0;i<files.length;i++){var f=files[i];$('um').textContent=(i+1)+'/'+files.length+' işleniyor: '+f.name;$('ubi').style.width=(i/files.length*100)+'%';
+  if(!/\.(pdf|docx)$/i.test(f.name)){bad.push(f.name+' (yalnız PDF/DOCX)');continue}
+  if(f.size>8*1024*1024){bad.push(f.name+' (8 MB üstü)');continue}
+  try{var j=await call({action:'upload',file_name:f.name,b64:await rd(f)});if(j.ok)ok++;else bad.push(f.name+' ('+(j.error||'hata')+')')}catch(e){bad.push(f.name+' (bağlantı)')}}
+ $('ubi').style.width='100%';$('um').textContent=ok+' CV eklendi.'+(bad.length?' Eklenemeyen: '+bad.join('; '):'');$('fi').value='';load()}
+$('pick').onclick=function(){$('fi').click()};$('fi').onchange=function(){if(this.files.length)up(this.files)};
+var dz=$('dz');['dragenter','dragover'].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.add('on')})});['dragleave','drop'].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.remove('on')})});
+dz.addEventListener('drop',function(e){if(e.dataTransfer.files.length)up(e.dataTransfer.files)});
+if(sess)start();
+</script></body></html>
