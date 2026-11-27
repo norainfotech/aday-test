@@ -31,23 +31,35 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
 <div id="app" class="hide">
  <div class="row" style="margin-bottom:14px"><div><h1>Nora Yönetim</h1><div class="muted" id="who"></div></div><div class="sp"></div><button class="sec" id="out">Çıkış</button></div>
 
- <div class="card"><h2>1. CV yükle</h2>
+ <div class="card"><h2>CV Yükle / Seç</h2>
   <div class="dz" id="dz">PDF veya Word (.docx) dosyalarını buraya bırak ya da <button class="sec" id="pick" style="padding:5px 12px">seç</button> — tek tek veya toplu, en fazla 8 MB<input id="fi" type="file" multiple accept=".pdf,.docx" class="hide"></div>
   <div class="bar hide" id="ub"><i id="ubi"></i></div><div class="msg muted" id="um"></div>
+
+  <div style="margin-top:16px"><b>LinkedIn profil linki</b> <span class="muted">(her satıra bir link; profil herkese açık olmalı)</span>
+   <div id="lk"></div>
+   <div class="row" style="margin-top:8px"><button class="sec" id="lkadd">+ Satır ekle</button><button id="lkgo">Profilleri ekle</button></div>
+   <div class="msg muted" id="lkm"></div></div>
+
+  <div style="margin-top:20px;border-top:1px solid #eef0f4;padding-top:14px">
+   <div class="row"><b>Kayıtlı profiller <span class="muted" id="ct"></span></b><div class="sp"></div>
+    <input id="q" placeholder="Ara: ad, başlık, beceri, not…" style="width:260px">
+    <select id="fs"><option value="">Tümü</option><option value="admin">Yüklenen CV</option><option value="linkedin">LinkedIn</option><option value="portal">Portal adayı</option></select>
+    <select id="so"><option value="new">En yeni</option><option value="name">Ada göre</option><option value="yrs">Deneyim</option></select></div>
+   <div class="row" style="margin:10px 0 4px"><label><input type="checkbox" id="sa"> Listelenenlerin tümünü seç</label><span class="muted" id="sel"></span><div class="sp"></div><button class="sec" id="sc0">Seçimi temizle</button></div>
+   <div id="list"></div><div class="row" style="margin-top:8px"><button class="sec hide" id="more">Daha fazla göster</button></div>
+  </div>
  </div>
 
- <div class="card"><h2>2. Uyum taraması</h2>
+ <div class="card"><h2>Uyum taraması</h2>
   <div class="row">
    <label>Uyum puanı <input id="mn" type="number" min="0" max="100" value="60" style="width:70px"> – <input id="mx" type="number" min="0" max="100" value="100" style="width:70px"></label>
-   <label>Kapsam <select id="sc"><option value="all">Tüm CV'ler (portaldakiler dahil)</option><option value="admin">Yalnız yüklediklerim</option></select></label>
-   <button id="scan">Toplu tara</button><span class="muted" id="sm"></span>
+   <button id="scan">Seçilenleri tara</button><span class="muted" id="sm"></span>
   </div>
-  <p class="muted" style="margin:10px 0 0">Puan, CV becerileri ile ilan becerilerinin örtüşmesine göre hesaplanır; kıdem, dil ve SAP modülü uyumsuzlukları baştan elenir. İlanlar mevcut veritabanından gelir (son 30 gün). Her CV için en iyi 8 ilan gösterilir.</p>
+  <p class="muted" style="margin:10px 0 0">Puan, CV becerileri ile ilan becerilerinin örtüşmesine göre hesaplanır; kıdem, dil ve SAP modülü uyumsuzlukları baştan elenir. İlanlar mevcut veritabanından gelir (son 30 gün). Yukarıda seçtiğin profillerin hepsi taranır (seçim yoksa uyarır). Her profil için en iyi 8 ilan gösterilir.</p>
  </div>
 
  <div class="card"><h2>Sonuçlar <span class="muted" id="rt"></span></h2><div id="res" class="muted">Henüz tarama yapılmadı.</div></div>
 
- <div class="card"><h2>CV'ler <span class="muted" id="ct"></span></h2><div id="list"></div></div>
 </div>
 
 <dialog id="dlg"><h2>CV bilgilerini düzenle</h2>
@@ -63,7 +75,7 @@ try{sess=JSON.parse(localStorage.getItem(SK))}catch(e){}
 function save(s){sess=s;try{s?localStorage.setItem(SK,JSON.stringify(s)):localStorage.removeItem(SK)}catch(e){}}
 function mk(j){return {access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600)}}
 function ensure(){if(sess&&sess.refresh_token&&sess.expires_at-Date.now()/1000<60)return fetch(SB+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:sess.refresh_token})}).then(function(r){return r.json()}).then(function(j){save(j.access_token?mk(j):null)}).catch(function(){});return Promise.resolve()}
-function call(body){return ensure().then(function(){if(!sess)throw new Error('auth');return fetch(SB+'/functions/v1/admin-api',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',Authorization:'Bearer '+sess.access_token},body:JSON.stringify(body)})}).then(function(r){return r.json().then(function(j){j._s=r.status;return j})})}
+function call(body,fn){return ensure().then(function(){if(!sess)throw new Error('auth');return fetch(SB+'/functions/v1/'+(fn||'admin-api'),{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',Authorization:'Bearer '+sess.access_token},body:JSON.stringify(body)})}).then(function(r){return r.json().then(function(j){j._s=r.status;return j})})}
 function lm(t,e){$('lm').textContent=t||'';$('lm').className='msg'+(e?' err':'')}
 function show(app){$('login').classList.toggle('hide',app);$('app').classList.toggle('hide',!app)}
 
@@ -84,18 +96,37 @@ function start(){call({action:'ping'}).then(function(j){
  $('who').textContent=j.email;show(true);load()}).catch(function(){save(null);show(false)})}
 
 function chips(a){return (a||[]).slice(0,12).map(function(s){return '<span class="chip">'+esc(s)+'</span>'}).join('')}
+var SEL={},PG=40;
+function kind(c){return c.src==='portal'?'portal':(/^https?:\/\//.test(c.file_name||'')?'linkedin':'admin')}
 function load(){return call({action:'list'}).then(function(j){CVS=j.cvs||[];draw()})}
-function draw(){var a=CVS.filter(function(c){return c.src==='admin'}).length;$('ct').textContent='('+a+' yüklenen, '+(CVS.length-a)+' portal)';
- if(!CVS.length){$('list').innerHTML='<div class="muted">Henüz CV yok.</div>';return}
- $('list').innerHTML='<table><tr><th>Kişi</th><th>Başlık</th><th>Yıl</th><th>Beceriler</th><th></th></tr>'+CVS.map(function(c){
-  return '<tr><td><b>'+esc(c.full_name||c.file_name||'—')+'</b><br><span class="tag'+(c.src==='portal'?' p':'')+'">'+(c.src==='portal'?'portal':'yüklenen')+'</span> <span class="muted">'+esc(c.country||'')+'</span></td><td>'+esc(c.headline||'')+'</td><td>'+(c.years_experience==null?'':esc(c.years_experience))+'</td><td>'+chips(c.skills)+'</td><td style="white-space:nowrap">'
-  +'<button class="sec" data-a="find" data-i="'+esc(c.id)+'">İlan bul</button> <button class="sec" data-a="cv" data-i="'+esc(c.id)+'">CV</button>'
-  +(c.src==='admin'?' <button class="sec" data-a="edit" data-i="'+esc(c.id)+'">Düzenle</button> <button class="red" data-a="del" data-i="'+esc(c.id)+'">Sil</button>':'')+'</td></tr>'}).join('')+'</table>'}
+function view(){var q=$('q').value.trim().toLowerCase(),f=$('fs').value,o=$('so').value;
+ var a=CVS.filter(function(c){if(f&&kind(c)!==f)return false;if(!q)return true;return [c.full_name,c.headline,c.note,c.country,c.file_name,(c.skills||[]).join(' ')].join(' ').toLowerCase().indexOf(q)>-1});
+ if(o==='name')a.sort(function(x,y){return String(x.full_name||'').localeCompare(String(y.full_name||''),'tr')});
+ else if(o==='yrs')a.sort(function(x,y){return (y.years_experience||0)-(x.years_experience||0)});
+ else a.sort(function(x,y){return String(y.created_at||'').localeCompare(String(x.created_at||''))});
+ return a}
+function nsel(){return Object.keys(SEL).filter(function(k){return SEL[k]&&byId(k)}).length}
+function draw(){var n=CVS.filter(function(c){return kind(c)==='admin'}).length,l=CVS.filter(function(c){return kind(c)==='linkedin'}).length;
+ $('ct').textContent='('+n+' CV, '+l+' LinkedIn, '+(CVS.length-n-l)+' portal)';
+ var v=view();$('sel').textContent=nsel()+' seçili · '+v.length+' listelenen';$('sa').checked=v.length>0&&v.every(function(c){return SEL[c.id]});
+ if(!CVS.length){$('list').innerHTML='<div class="muted">Henüz kayıt yok.</div>';$('more').classList.add('hide');return}
+ if(!v.length){$('list').innerHTML='<div class="muted">Bu aramaya uygun kayıt yok.</div>';$('more').classList.add('hide');return}
+ var shown=v.slice(0,PG);$('more').classList.toggle('hide',v.length<=PG);
+ $('list').innerHTML='<table><tr><th></th><th>Kişi</th><th>Başlık</th><th>Yıl</th><th>Beceriler</th><th></th></tr>'+shown.map(function(c){var k=kind(c);
+  return '<tr><td><input type="checkbox" data-a="chk" data-i="'+esc(c.id)+'"'+(SEL[c.id]?' checked':'')+'></td><td><b>'+esc(c.full_name||c.file_name||'—')+'</b><br><span class="tag'+(k==='portal'?' p':'')+'">'+(k==='portal'?'portal':k==='linkedin'?'LinkedIn':'CV')+'</span> <span class="muted">'+esc(c.country||'')+'</span></td><td>'+esc(c.headline||'')+(c.note?'<br><span class="muted">'+esc(c.note)+'</span>':'')+'</td><td>'+(c.years_experience==null?'':c.years_experience)+'</td><td>'+chips(c.skills)+'</td><td style="white-space:nowrap">'
+  +'<button class="sec" data-a="find" data-i="'+esc(c.id)+'">İlan bul</button> <button class="sec" data-a="cv" data-i="'+esc(c.id)+'">'+(k==='linkedin'?'Profil':'CV')+'</button>'
+  +(k!=='portal'?' <button class="sec" data-a="edit" data-i="'+esc(c.id)+'">Düzenle</button> <button class="red" data-a="del" data-i="'+esc(c.id)+'">Sil</button>':'')+'</td></tr>'}).join('')+'</table>'}
+$('q').oninput=function(){PG=40;draw()};$('fs').onchange=$('so').onchange=function(){PG=40;draw()};
+$('more').onclick=function(){PG+=40;draw()};
+$('sa').onchange=function(){var on=this.checked;view().forEach(function(c){SEL[c.id]=on});draw()};
+$('sc0').onclick=function(){SEL={};draw()};
 function byId(i){return CVS.filter(function(c){return c.id===i})[0]}
+$('list').onchange=function(e){var t=e.target;if(t.getAttribute&&t.getAttribute('data-a')==='chk'){SEL[t.getAttribute('data-i')]=t.checked;var v=view();$('sel').textContent=nsel()+' seçili · '+v.length+' listelenen';$('sa').checked=v.every(function(c){return SEL[c.id]})}};
 $('list').onclick=function(e){var b=e.target.closest('button');if(!b)return;var i=b.getAttribute('data-i'),a=b.getAttribute('data-a'),c=byId(i);
  if(a==='find')find(c);
+ if(a==='cv'&&kind(c)==='linkedin'){window.open(c.file_name,'_blank','noopener');return}
  if(a==='cv'){var w=window.open('','_blank');call({action:'cvlink',id:i}).then(function(j){if(j.url&&w)w.location=j.url;else if(w){w.close();alert('CV dosyası bulunamadı.')}})}
- if(a==='del'&&confirm((c.full_name||c.file_name)+' silinsin mi? Dosya da kalıcı silinir.'))call({action:'delete',id:i}).then(load);
+ if(a==='del'&&confirm((c.full_name||c.file_name)+' silinsin mi? Dosya da kalıcı silinir.'))call({action:'delete',id:i}).then(function(){delete SEL[i];load()});
  if(a==='edit'){$('e_n').value=c.full_name||'';$('e_h').value=c.headline||'';$('e_y').value=c.years_experience==null?'':c.years_experience;$('e_c').value=c.country||'';$('e_l').value=(c.langs||[]).join(',');$('e_s').value=(c.skills||[]).join(', ');$('e_o').value=c.note||'';$('dlg').setAttribute('data-i',i);$('dlg').showModal()}};
 $('e_no').onclick=function(){$('dlg').close()};
 $('e_ok').onclick=function(){var y=$('e_y').value.trim();call({action:'update',id:$('dlg').getAttribute('data-i'),fields:{full_name:$('e_n').value,headline:$('e_h').value,years_experience:y===''?null:parseInt(y,10),country:$('e_c').value,langs:$('e_l').value.split(','),skills:$('e_s').value.split(','),note:$('e_o').value}}).then(function(){$('dlg').close();load()})};
@@ -107,9 +138,27 @@ function table(rows,withCv){return '<table><tr><th>Puan</th>'+(withCv?'<th>CV</t
  +'<td><b>'+esc(p.title)+'</b><br><span class="muted">'+esc([p.company,p.location,p.source].filter(Boolean).join(' · '))+'</span>'+(p.apply_url?'<br><a href="'+esc(p.apply_url)+'" target="_blank" rel="noopener">İlana git</a>':'')+'</td><td>'+chips(p.strengths)+'</td></tr>'}).join('')+'</table>'}
 function find(c){var r=rng();$('res').innerHTML='<span class="muted">Aranıyor…</span>';$('rt').textContent='';window.scrollTo({top:$('res').offsetTop-80,behavior:'smooth'});
  call({action:'match',id:c.id,min:r.min,max:r.max}).then(function(j){if(!j.jobs)throw 0;$('rt').textContent='— '+(c.full_name||c.file_name)+': '+j.jobs.length+' ilan ('+r.min+'–'+r.max+'), taranan ilan: '+j.total_jobs;$('res').innerHTML=j.jobs.length?table(j.jobs,false):'<span class="muted">Bu aralıkta ilan yok.</span>'}).catch(function(){$('res').innerHTML='<span class="err">Arama başarısız.</span>'})}
-$('scan').onclick=function(){var r=rng();$('scan').disabled=true;$('sm').textContent='Taranıyor…';
- call({action:'scan',min:r.min,max:r.max,scope:$('sc').value}).then(function(j){if(!j.pairs)throw 0;$('sm').textContent='';$('rt').textContent='— '+j.cv_count+' CV × '+j.total_jobs+' ilan, '+j.pairs.length+' çift ('+r.min+'–'+r.max+')'+(j.truncated?' · ilk 400 gösteriliyor':'');
-  $('res').innerHTML=j.pairs.length?table(j.pairs,true):'<span class="muted">Bu aralıkta eşleşme yok. Alt sınırı düşürmeyi dene.</span>'}).catch(function(){$('sm').textContent='Tarama başarısız.'}).then(function(){$('scan').disabled=false})};
+$('scan').onclick=async function(){var ids=CVS.filter(function(c){return SEL[c.id]}).map(function(c){return c.id});
+ if(!ids.length){$('sm').textContent='Önce yukarıdan en az bir profil seç.';return}
+ var r=rng(),pairs=[],tot=0,fail=0;$('scan').disabled=true;
+ for(var i=0;i<ids.length;i++){var c=byId(ids[i]);$('sm').textContent='Taranıyor '+(i+1)+'/'+ids.length+': '+(c.full_name||c.file_name);
+  try{var j=await call({action:'match',id:c.id,min:r.min,max:r.max});if(!j.jobs)throw 0;tot=j.total_jobs;j.jobs.slice(0,8).forEach(function(m){m.cv_name=c.full_name||c.file_name;m.cv_headline=c.headline;pairs.push(m)})}catch(e){fail++}}
+ pairs.sort(function(a,b){return b.score-a.score});$('sm').textContent=fail?fail+' profil taranamadı.':'';
+ $('rt').textContent='— '+ids.length+' profil × '+tot+' ilan, '+pairs.length+' çift ('+r.min+'–'+r.max+')';
+ $('res').innerHTML=pairs.length?table(pairs,true):'<span class="muted">Bu aralıkta eşleşme yok. Alt sınırı düşürmeyi dene.</span>';$('scan').disabled=false;window.scrollTo({top:$('res').offsetTop-80,behavior:'smooth'})};
+
+// LinkedIn satirlari
+function lkrow(){var d=document.createElement('div');d.className='row';d.style.marginTop='6px';d.innerHTML='<input class="lki" placeholder="https://www.linkedin.com/in/..." style="flex:1;min-width:240px">';$('lk').appendChild(d);return d}
+$('lkadd').onclick=function(){lkrow().firstChild.focus()};
+$('lkgo').onclick=async function(){var ins=[].slice.call(document.querySelectorAll('.lki')),urls=[];
+ ins.forEach(function(i){i.value.split(/[\s,;]+/).forEach(function(u){if(/linkedin\.com\/in\//i.test(u))urls.push(u)})});
+ if(!urls.length){$('lkm').textContent='Geçerli bir LinkedIn profil linki (linkedin.com/in/...) yok.';return}
+ $('lkgo').disabled=true;var ok=0,bad=[];
+ for(var i=0;i<urls.length;i++){$('lkm').textContent=(i+1)+'/'+urls.length+' okunuyor… (profil başına ~20-40 sn)';
+  try{var j=await call({url:urls[i]},'admin-link');if(j.ok){ok++;SEL[j.id]=true}else bad.push(urls[i]+' ('+({duplicate:'zaten kayıtlı',profile_empty:'profil okunamadı / gizli',bad_url:'geçersiz link'}[j.error]||j.error||'hata')+')')}catch(e){bad.push(urls[i]+' (bağlantı)')}}
+ $('lkm').textContent=ok+' profil eklendi ve seçildi.'+(bad.length?' Eklenemeyen: '+bad.join('; '):'');
+ $('lk').innerHTML='';lkrow();$('lkgo').disabled=false;load()};
+lkrow();
 
 function rd(f){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(String(r.result).split(',')[1])};r.onerror=no;r.readAsDataURL(f)})}
 async function up(files){files=[].slice.call(files);var ok=0,bad=[];$('ub').classList.remove('hide');
