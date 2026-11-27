@@ -132,7 +132,7 @@ $('list').onchange=function(e){var t=e.target;if(t.getAttribute&&t.getAttribute(
 $('list').onclick=function(e){var b=e.target.closest('button');if(!b)return;var i=b.getAttribute('data-i'),a=b.getAttribute('data-a'),c=byId(i);
  if(a==='find')find(c);
  if(a==='cv'&&kind(c)==='linkedin'){window.open(c.file_name,'_blank','noopener');return}
- if(a==='cv'){var w=window.open('','_blank');call({action:'cvlink',id:i}).then(function(j){if(j.url&&w)w.location=j.url;else if(w){w.close();alert('CV dosyası bulunamadı.')}})}
+ if(a==='cv'){var w=window.open('','_blank');call({action:'cvlink',id:i}).then(function(j){if(j.url&&w)w.location=/\.docx?$/i.test(c.file_name||'')?'https://view.officeapps.live.com/op/view.aspx?src='+encodeURIComponent(j.url):j.url;else if(w){w.close();alert('CV dosyası bulunamadı.')}})}
  if(a==='del'&&confirm((c.full_name||c.file_name)+' silinsin mi? Dosya da kalıcı silinir.'))call({action:'delete',id:i}).then(function(){delete SEL[i];load()});
  if(a==='edit'){$('e_n').value=c.full_name||'';$('e_h').value=c.headline||'';$('e_y').value=c.years_experience==null?'':c.years_experience;$('e_c').value=c.country||'';$('e_l').value=(c.langs||[]).join(',');$('e_s').value=(c.skills||[]).join(', ');$('e_o').value=c.priority||'';$('dlg').setAttribute('data-i',i);$('dlg').showModal()}};
 $('e_no').onclick=function(){$('dlg').close()};
