@@ -23,6 +23,9 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
  <div id="s1"><input id="em" type="email" placeholder="E-posta" style="width:100%" value="kerem@norainfotech.com"><div class="row" style="margin-top:10px"><button id="send">Kod gönder</button></div></div>
  <div id="s2" class="hide"><input id="cd" inputmode="numeric" autocomplete="one-time-code" placeholder="E-postadaki kod" style="width:100%"><div class="row" style="margin-top:10px"><button id="ver">Giriş</button><button class="sec" id="back">Geri</button></div></div>
  <div class="msg" id="lm"></div>
+ <details style="margin-top:14px"><summary class="muted" style="cursor:pointer">Kod gelmediyse: giriş linkiyle</summary>
+  <p class="muted">Maildeki "Sign in" linkine bas. Açılan hata sayfasının adres çubuğundaki tüm adresi kopyalayıp buraya yapıştır.</p>
+  <input id="pu" placeholder="http://localhost:3000/#access_token=..." style="width:100%"><div class="row" style="margin-top:10px"><button class="sec" id="pgo">Linkle giriş</button></div></details>
 </div>
 
 <div id="app" class="hide">
@@ -66,6 +69,9 @@ function show(app){$('login').classList.toggle('hide',app);$('app').classList.to
 
 $('send').onclick=function(){var em=$('em').value.trim().toLowerCase();if(!em)return;lm('Gönderiliyor…');
  fetch(SB+'/auth/v1/otp',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email:em,create_user:(['kerem@norainfotech.com','keremuzlu@gmail.com'].indexOf(em)>-1)})}).then(function(r){if(!r.ok)throw 0;$('s1').classList.add('hide');$('s2').classList.remove('hide');lm('Kod e-postana gönderildi.')}).catch(function(){lm('Kod gönderilemedi.',1)})};
+$('pgo').onclick=function(){var u=$('pu').value.trim(),h=u.indexOf('#')>-1?u.split('#')[1]:'',q={};h.split('&').forEach(function(x){var k=x.split('=');if(k[0])q[k[0]]=decodeURIComponent(k[1]||'')});
+ if(!q.access_token){lm('Adreste access_token bulunamadı. Tüm adresi kopyala.',1);return}
+ save(mk({access_token:q.access_token,refresh_token:q.refresh_token,expires_in:parseInt(q.expires_in||'3600',10)}));history.replaceState(null,'',location.pathname);start()};
 $('back').onclick=function(){$('s2').classList.add('hide');$('s1').classList.remove('hide');lm('')};
 $('ver').onclick=function(){var em=$('em').value.trim().toLowerCase(),t=$('cd').value.trim();if(!t)return;lm('Doğrulanıyor…');
  fetch(SB+'/auth/v1/verify',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({type:'email',email:em,token:t})}).then(function(r){return r.json()}).then(function(j){if(!j.access_token)throw 0;save(mk(j));start()}).catch(function(){lm('Kod hatalı veya süresi dolmuş.',1)})};
