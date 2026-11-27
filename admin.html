@@ -55,15 +55,13 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
    <select id="cf"><option value="">Ülke: hepsi</option></select>
    <select id="lf"><option value="">Dil: hepsi</option></select>
    <span class="muted">Yıl</span><input id="ymin" type="number" min="0" placeholder="min" style="width:62px"><input id="ymax" type="number" min="0" placeholder="max" style="width:62px">
-   <input id="sk" placeholder="Beceri/modül: SAP SD…" style="width:150px">
-   <label class="muted"><input type="checkbox" id="op"> ★ öncelikli</label>
-   <select id="so"><option value="pri">Sıra: öncelik</option><option value="new">En yeni</option><option value="name">Ada göre</option><option value="yrs">Deneyim</option></select>
+   <select id="pf"><option value="">Öncelik: hepsi</option></select>
   </div>
   <div id="fch" style="margin-top:4px"></div>
   <div class="fb" style="margin:8px 0">
    <label class="muted"><input type="checkbox" id="sa"> Listelenenleri seç</label><span class="muted" id="sel"></span><div class="sp"></div>
-   <label class="muted">Uyum <input id="mn" type="number" min="0" max="100" value="60" style="width:62px"> – <input id="mx" type="number" min="0" max="100" value="100" style="width:62px"></label>
-   <button id="scan">Seçilenleri tara</button><button class="sec" id="rx" title="Seçili CV dosyalarını yapay zekayla yeniden okur">Yeniden oku</button><button class="sec" id="sc0">Temizle</button><span class="muted" id="sm"></span>
+   <select id="fit"><option value="25-50">Uyum 25–50</option><option value="50-75" selected>Uyum 50–75</option><option value="75-100">Uyum 75–100</option></select>
+   <button id="scan">Seçilenleri tara</button><span class="muted" id="sm"></span>
   </div>
   <div id="list" class="lst sticky"></div>
  </div>
@@ -75,7 +73,7 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
 <dialog id="dlg"><h2>CV bilgilerini düzenle</h2>
  <label>Ad soyad</label><input id="e_n"><label>Başlık</label><input id="e_h"><label>Deneyim (yıl)</label><input id="e_y" type="number" min="0" max="60">
  <label>Ülke</label><input id="e_c"><label>Diller (virgülle: tr,en,de)</label><input id="e_l"><label>Beceriler (virgülle)</label><textarea id="e_s" rows="3"></textarea><label>Öncelik (1 en yüksek, boş = yok)</label><input id="e_o" type="number" min="1">
- <div class="row" style="margin-top:14px"><button id="e_ok">Kaydet</button><button class="sec" id="e_no">Vazgeç</button><div class="sp"></div><button class="red" id="e_del">Sil</button></div></dialog>
+ <div class="row" style="margin-top:14px"><button id="e_ok">Kaydet</button><button class="sec" id="e_no">Vazgeç</button><div class="sp"></div><button class="sec" id="e_rx" title="CV dosyasını yapay zekayla yeniden okur; beceriler yenilenir">CV'yi yeniden oku</button><button class="red" id="e_del">Sil</button></div></dialog>
 </div>
 <script>
 var SB='https://fulwkbmmsobyecelmqdj.supabase.co',KEY='sb_publishable_a13BN32K4vLsLhluf2o19w_5hTf50_m',SK='nora-admin',sess=null,CVS=[];
@@ -110,38 +108,29 @@ var SEL={},AN={},HO={};
 function kind(c){return c.src==='portal'?'portal':(/^https?:\/\//.test(c.file_name||'')?'linkedin':'admin')}
 function load(){return call({action:'list'}).then(function(j){CVS=j.cvs||[];draw()})}
 function fill(id,vals,lab){var el=$(id),v=el.value;el.innerHTML='<option value="">'+lab+': hepsi</option>'+vals.map(function(x){return '<option>'+esc(x)+'</option>'}).join('');el.value=vals.indexOf(v)>-1?v:''}
-function view(){var q=$('q').value.trim().toLowerCase(),f=$('fs').value,o=$('so').value,cf=$('cf').value,lf=$('lf').value,ymin=parseInt($('ymin').value,10),ymax=parseInt($('ymax').value,10),sk=$('sk').value.trim().toLowerCase(),op=$('op').checked;
+function view(){var q=$('q').value.trim().toLowerCase(),f=$('fs').value,cf=$('cf').value,lf=$('lf').value,ymin=parseInt($('ymin').value,10),ymax=parseInt($('ymax').value,10),pf=$('pf').value;
  var a=CVS.filter(function(c){if(f&&kind(c)!==f)return false;if(cf&&c.country!==cf)return false;if(lf&&(c.langs||[]).indexOf(lf)<0)return false;
   if(!isNaN(ymin)&&(c.years_experience==null||c.years_experience<ymin))return false;if(!isNaN(ymax)&&(c.years_experience==null||c.years_experience>ymax))return false;
-  if(sk&&(c.skills||[]).join(' ').toLowerCase().indexOf(sk)<0)return false;if(op&&!c.priority)return false;
+  if(pf==='none'?!!c.priority:(pf&&String(c.priority)!==pf))return false;
   if(!q)return true;return [c.full_name,c.headline,c.country,c.file_name,(c.skills||[]).join(' ')].join(' ').toLowerCase().indexOf(q)>-1});
- if(o==='name')a.sort(function(x,y){return String(x.full_name||'').localeCompare(String(y.full_name||''),'tr')});
- else if(o==='yrs')a.sort(function(x,y){return (y.years_experience||0)-(x.years_experience||0)});
- else if(o==='pri')a.sort(function(x,y){var p=(x.priority||9999)-(y.priority||9999);return p||String(y.created_at||'').localeCompare(String(x.created_at||''))});
- else a.sort(function(x,y){return String(y.created_at||'').localeCompare(String(x.created_at||''))});
+ a.sort(function(x,y){var p=(x.priority||9999)-(y.priority||9999);return p||String(y.created_at||'').localeCompare(String(x.created_at||''))});
  return a}
 function byId(i){return CVS.filter(function(c){return c.id===i})[0]}
 function nsel(){return Object.keys(SEL).filter(function(k){return SEL[k]&&byId(k)}).length}
-function fchips(){var d=[['fs','Kaynak: '+$('fs').selectedOptions[0].text,$('fs').value],['cf','Ülke: '+$('cf').value,$('cf').value],['lf','Dil: '+$('lf').value,$('lf').value],['ymin','Yıl ≥ '+$('ymin').value,$('ymin').value],['ymax','Yıl ≤ '+$('ymax').value,$('ymax').value],['sk','Beceri: '+$('sk').value,$('sk').value.trim()],['op','★ öncelikli',$('op').checked]];
+function fchips(){var d=[['fs','Kaynak: '+$('fs').selectedOptions[0].text,$('fs').value],['cf','Ülke: '+$('cf').value,$('cf').value],['lf','Dil: '+$('lf').value,$('lf').value],['ymin','Yıl ≥ '+$('ymin').value,$('ymin').value],['ymax','Yıl ≤ '+$('ymax').value,$('ymax').value],['pf',$('pf').value==='none'?'Öncelik yok':'Öncelik: '+$('pf').value,$('pf').value]];
  $('fch').innerHTML=d.filter(function(x){return x[2]}).map(function(x){return '<span class="fchip">'+esc(x[1])+'<b data-c="'+x[0]+'">×</b></span>'}).join('')}
 $('fch').onclick=function(e){var c=e.target.getAttribute&&e.target.getAttribute('data-c');if(!c)return;var el=$(c);if(el.type==='checkbox')el.checked=false;else el.value='';draw()};
 function draw(){var n=CVS.filter(function(c){return kind(c)==='admin'}).length,l=CVS.filter(function(c){return kind(c)==='linkedin'}).length;
  $('ct').textContent='('+n+' CV, '+l+' LinkedIn, '+(CVS.length-n-l)+' portal)';
- var cs=[],ls=[];CVS.forEach(function(c){if(c.country&&cs.indexOf(c.country)<0)cs.push(c.country);(c.langs||[]).forEach(function(x){if(ls.indexOf(x)<0)ls.push(x)})});cs.sort();ls.sort();fill('cf',cs,'Ülke');fill('lf',ls,'Dil');fchips();
+ var cs=[],ls=[];CVS.forEach(function(c){if(c.country&&cs.indexOf(c.country)<0)cs.push(c.country);(c.langs||[]).forEach(function(x){if(ls.indexOf(x)<0)ls.push(x)})});cs.sort();ls.sort();fill('cf',cs,'Ülke');fill('lf',ls,'Dil');var ps=[];CVS.forEach(function(c){if(c.priority&&ps.indexOf(c.priority)<0)ps.push(c.priority)});ps.sort(function(a,b){return a-b});var pv=$('pf').value;$('pf').innerHTML='<option value="">Öncelik: hepsi</option>'+ps.map(function(x){return '<option>'+x+'</option>'}).join('')+(CVS.some(function(c){return !c.priority})?'<option value="none">Öncelik yok</option>':'');$('pf').value=(pv==='none'||ps.map(String).indexOf(pv)>-1)?pv:'';fchips();
  var v=view();$('sel').textContent=nsel()+' seçili · '+v.length+' listelenen';$('sa').checked=v.length>0&&v.every(function(c){return SEL[c.id]});
  if(!v.length){$('list').innerHTML='<div class="muted" style="padding:12px">'+(CVS.length?'Bu filtrelere uygun kayıt yok.':'Henüz kayıt yok.')+'</div>';return}
  $('list').innerHTML='<table><tr><th></th><th>Kişi</th><th>Başlık</th><th>Yıl</th><th>Ülke</th><th>Dil</th><th></th></tr>'+v.map(function(c){var k=kind(c);
   return '<tr><td><input type="checkbox" data-a="chk" data-i="'+esc(c.id)+'"'+(SEL[c.id]?' checked':'')+'></td><td><b>'+esc(c.full_name||c.file_name||'—')+'</b>'+(c.priority?' <span class="tag">★'+c.priority+'</span>':'')+'</td><td>'+esc(c.headline||'')+'</td><td>'+(c.years_experience==null?'':c.years_experience)+'</td><td>'+esc(c.country||'')+'</td><td>'+esc((c.langs||[]).join(' '))+'</td><td style="white-space:nowrap">'
   +'<button class="ib" title="'+(k==='linkedin'?'LinkedIn profili':'CV\'yi aç')+'" data-a="cv" data-i="'+esc(c.id)+'">📄</button>'+(k!=='portal'?'<button class="ib" title="Düzenle" data-a="edit" data-i="'+esc(c.id)+'">✎</button>':'')+'</td></tr>'}).join('')+'</table>'}
-['q','cf','lf','ymin','ymax','sk','fs','so'].forEach(function(i){$(i).oninput=draw});$('op').onchange=draw;
+['q','cf','lf','ymin','ymax','fs','pf'].forEach(function(i){$(i).oninput=draw});
 $('sa').onchange=function(){var on=this.checked;view().forEach(function(c){SEL[c.id]=on});draw()};
-$('rx').onclick=async function(){var a=CVS.filter(function(c){return SEL[c.id]&&kind(c)==='admin'});
- if(!a.length){$('sm').textContent='Yeniden okumak için yüklenmiş CV dosyalarından seç.';return}
- if(!confirm(a.length+' CV yeniden okunacak. Becerilerde elle yaptığın düzeltmeler sıfırlanır. Devam?'))return;
- $('rx').disabled=true;var ok=0;for(var i=0;i<a.length;i++){$('sm').textContent='Okunuyor '+(i+1)+'/'+a.length;
-  try{var j=await call({action:'reextract',id:a[i].id});if(j.ok)ok++}catch(e){}}
- $('rx').disabled=false;await load();$('sm').textContent=ok+'/'+a.length+' CV yenilendi.'};
-$('sc0').onclick=function(){SEL={};draw()};
+$('e_rx').onclick=async function(){var i=$('dlg').getAttribute('data-i'),c=byId(i);if(!c||kind(c)!=='admin'){alert('Yalnız yüklenmiş CV dosyaları yeniden okunur.');return}if(!confirm('CV yeniden okunacak; becerilerde elle yaptığın düzeltmeler sıfırlanır. Devam?'))return;$('e_rx').disabled=true;$('e_rx').textContent='Okunuyor…';try{var j=await call({action:'reextract',id:i});if(!j.ok)alert('Okunamadı: '+(j.error||j._s))}catch(e){}$('e_rx').disabled=false;$('e_rx').textContent="CV'yi yeniden oku";$('dlg').close();load()};
 $('list').onchange=function(e){var t=e.target;if(t.getAttribute&&t.getAttribute('data-a')==='chk'){SEL[t.getAttribute('data-i')]=t.checked;var v=view();$('sel').textContent=nsel()+' seçili · '+v.length+' listelenen';$('sa').checked=v.every(function(c){return SEL[c.id]})}};
 $('list').onclick=function(e){var b=e.target.closest('button');if(!b)return;var i=b.getAttribute('data-i'),a=b.getAttribute('data-a'),c=byId(i);
  if(a==='cv'&&kind(c)==='linkedin'){window.open(c.file_name,'_blank','noopener');return}
@@ -152,7 +141,7 @@ $('e_del').onclick=function(){var i=$('dlg').getAttribute('data-i'),c=byId(i);if
 $('e_ok').onclick=function(){var y=$('e_y').value.trim();call({action:'update',id:$('dlg').getAttribute('data-i'),fields:{full_name:$('e_n').value,headline:$('e_h').value,years_experience:y===''?null:parseInt(y,10),country:$('e_c').value,langs:$('e_l').value.split(','),skills:$('e_s').value.split(','),priority:$('e_o').value.trim()===''?null:parseInt($('e_o').value,10)}}).then(function(){$('dlg').close();load()})};
 
 // ---- Tarama: ilana gore gruplu sonuc ----
-function rng(){var a=parseInt($('mn').value,10),b=parseInt($('mx').value,10);if(isNaN(a))a=60;if(isNaN(b))b=100;return {min:a,max:b}}
+function rng(){var p=$('fit').value.split('-');return {min:+p[0],max:+p[1]}}
 function scc(s){return s>=75?'h':s>=60?'m':'l'}
 var GR={},KEYS={};
 function renderRes(){var gs=Object.keys(GR).map(function(k){return GR[k]});gs.forEach(function(g){g.items.sort(function(a,b){return b.m.score-a.m.score});g.top=g.items[0].m.score});gs.sort(function(a,b){return b.top-a.top||b.items.length-a.items.length});
