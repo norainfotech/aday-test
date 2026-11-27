@@ -33,6 +33,7 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
 
  <div class="card"><h2>CV Yükle / Seç</h2>
   <div class="dz" id="dz">PDF veya Word (.docx) dosyalarını buraya bırak ya da <button class="sec" id="pick" style="padding:5px 12px">seç</button> — tek tek veya toplu, en fazla 8 MB<input id="fi" type="file" multiple accept=".pdf,.docx" class="hide"></div>
+  <div class="row" style="margin-top:8px"><button class="sec" id="fsync">Klasörden ekle</button><span class="muted" id="fsm">Drive klasörünü seç; listede olmayan CV'ler eklenir. Klasör hatırlanır.</span></div>
   <div class="bar hide" id="ub"><i id="ubi"></i></div><div class="msg muted" id="um"></div>
 
   <div style="margin-top:16px"><b>LinkedIn profil linki</b> <span class="muted">(her satıra bir link; profil herkese açık olmalı)</span>
@@ -93,7 +94,7 @@ $('out').onclick=function(){save(null);show(false);$('s2').classList.add('hide')
 function start(){call({action:'ping'}).then(function(j){
  if(j._s===403){save(null);show(false);lm('Bu hesabın yönetim yetkisi yok.',1);return}
  if(!j.ok){save(null);show(false);lm('Oturum geçersiz, tekrar giriş yap.',1);return}
- $('who').textContent=j.email;show(true);load()}).catch(function(){save(null);show(false)})}
+ $('who').textContent=j.email;show(true);load().then(function(){folderSync(false)})}).catch(function(){save(null);show(false)})}
 
 function chips(a){return (a||[]).slice(0,12).map(function(s){return '<span class="chip">'+esc(s)+'</span>'}).join('')}
 var SEL={},PG=40;
@@ -177,5 +178,29 @@ async function up(files){files=[].slice.call(files);var ok=0,bad=[];$('ub').clas
 $('pick').onclick=function(){$('fi').click()};$('fi').onchange=function(){if(this.files.length)up(this.files)};
 var dz=$('dz');['dragenter','dragover'].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.add('on')})});['dragleave','drop'].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.remove('on')})});
 dz.addEventListener('drop',function(e){if(e.dataTransfer.files.length)up(e.dataTransfer.files)});
+
+// ---- Klasörden eşitle (tarayıcı klasör erişimi; yalnız Chrome/Edge) ----
+function idb(){return new Promise(function(ok,no){var r=indexedDB.open('nora-admin',1);r.onupgradeneeded=function(){r.result.createObjectStore('h')};r.onsuccess=function(){ok(r.result)};r.onerror=no})}
+function idbGet(k){return idb().then(function(d){return new Promise(function(ok){var q=d.transaction('h').objectStore('h').get(k);q.onsuccess=function(){ok(q.result)};q.onerror=function(){ok(null)}})})}
+function idbSet(k,v){return idb().then(function(d){return new Promise(function(ok){var t=d.transaction('h','readwrite');t.objectStore('h').put(v,k);t.oncomplete=ok})})}
+var SYNCING=false;
+async function folderSync(manual){
+ if(SYNCING||!window.showDirectoryPicker)return;SYNCING=true;var m=$('fsm');
+ try{
+  var h=null;try{h=await idbGet('dir')}catch(e){}
+  if(h){var p=await h.queryPermission({mode:'read'});if(p!=='granted'){if(!manual){m.textContent='Klasör izni bekliyor: "Klasörden ekle"ye bas.';return}p=await h.requestPermission({mode:'read'});if(p!=='granted')h=null}}
+  else if(!manual)return;
+  if(!h){h=await window.showDirectoryPicker({mode:'read'});await idbSet('dir',h)}
+  m.textContent='Klasör taranıyor…';
+  var have={};CVS.forEach(function(c){if(c.file_name)have[c.file_name.toLowerCase()]=1});
+  var todo=[],skip=[];
+  for await(var e of h.values()){if(e.kind!=='file')continue;if(have[e.name.toLowerCase()])continue;if(/\.(pdf|docx)$/i.test(e.name))todo.push(e);else skip.push(e.name)}
+  if(!todo.length){m.textContent='Klasördeki tüm CV\'ler listede ('+h.name+').'+(skip.length?' Atlanan (PDF/DOCX değil): '+skip.join(', '):'');return}
+  var files=[];for(var i=0;i<todo.length;i++)files.push(await todo[i].getFile());
+  await up(files);
+  m.textContent=files.length+' yeni dosya işlendi ('+h.name+').'+(skip.length?' Atlanan (PDF/DOCX değil): '+skip.join(', '):'');
+ }catch(e){if(e&&e.name!=='AbortError')m.textContent='Klasör okunamadı: '+(e.message||e)}
+ finally{SYNCING=false}}
+$('fsync').onclick=function(){if(!window.showDirectoryPicker){$('fsm').textContent='Bu tarayıcı klasör erişimini desteklemiyor; Chrome veya Edge kullan.';return}folderSync(true)};
 if(location.hash.indexOf('access_token=')>-1)hashLogin(location.href);else if(sess)start();
 </script></body></html>
