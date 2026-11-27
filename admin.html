@@ -15,6 +15,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px 6px;
 .hide{display:none!important}a{color:#1c4fd6}
 .dz{border:2px dashed #cfd5df;border-radius:10px;padding:18px;text-align:center;color:#667085}.dz.on{border-color:#1c2f5a;background:#f0f4fb}
 .bar{height:6px;background:#e3e6ec;border-radius:4px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:#1c2f5a;width:0}
+@media(min-width:760px){.g2{display:grid;grid-template-columns:1fr 1.4fr;gap:16px}}.g2 .bx{border:1px solid #eef0f4;border-radius:10px;padding:12px;min-width:0}.g2 .dz{margin-top:8px;padding:12px;font-size:13px}@media(max-width:759px){.g2 .bx{margin-bottom:12px}}
 dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog::backdrop{background:rgba(0,0,0,.35)}dialog label{display:block;margin:10px 0 3px;font-size:13px;color:#667085}dialog input,dialog textarea{width:100%}
 </style></head><body><div class="w">
 
@@ -32,14 +33,16 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
  <div class="row" style="margin-bottom:14px"><div><h1>Nora Yönetim</h1><div class="muted" id="who"></div></div><div class="sp"></div><button class="sec" id="out">Çıkış</button></div>
 
  <div class="card"><h2>CV Yükle / Seç</h2>
-  <div class="dz" id="dz">PDF veya Word (.docx) dosyalarını buraya bırak ya da <button class="sec" id="pick" style="padding:5px 12px">seç</button> — tek tek veya toplu, en fazla 8 MB<input id="fi" type="file" multiple accept=".pdf,.docx" class="hide"></div>
-  <div class="row" style="margin-top:8px"><button class="sec" id="fsync">Klasörden ekle</button><span class="muted" id="fsm">Drive klasörünü seç; listede olmayan CV'ler eklenir. Klasör hatırlanır.</span></div>
-  <div class="bar hide" id="ub"><i id="ubi"></i></div><div class="msg muted" id="um"></div>
-
-  <div style="margin-top:16px"><b>LinkedIn profil linki</b> <span class="muted">(her satıra bir link; profil herkese açık olmalı)</span>
-   <div id="lk"></div>
-   <div class="row" style="margin-top:8px"><button class="sec" id="lkadd">+ Satır ekle</button><button id="lkgo">Profilleri ekle</button></div>
-   <div class="msg muted" id="lkm"></div></div>
+  <div class="g2">
+   <div class="bx"><b>CV dosyası</b>
+    <div class="dz" id="dz">PDF / Word'ü buraya bırak<input id="fi" type="file" multiple accept=".pdf,.docx" class="hide"></div>
+    <div class="row" style="margin-top:8px"><button class="sec" id="pick">Dosya seç</button><button class="sec" id="fsync" title="Drive klasörünü seç; listede olmayan CV'ler eklenir. Klasör hatırlanır.">Klasörden ekle</button></div>
+    <div class="bar hide" id="ub"><i id="ubi"></i></div><div class="msg muted" id="um"></div><div class="msg muted" id="fsm"></div></div>
+   <div class="bx"><b>LinkedIn profil linki</b>
+    <div class="row" style="margin-top:8px;flex-wrap:nowrap"><input class="lki" placeholder="https://www.linkedin.com/in/..." style="flex:1;min-width:0"><button class="sec" id="lkadd" title="Bir satır daha ekle">+</button><button id="lkgo">Profilleri ekle</button></div>
+    <div id="lk"></div>
+    <div class="msg muted" id="lkm">Her satıra bir link; profil herkese açık olmalı.</div></div>
+  </div>
 
   <div style="margin-top:20px;border-top:1px solid #eef0f4;padding-top:14px">
    <div class="row"><b>Kayıtlı profiller <span class="muted" id="ct"></span></b><div class="sp"></div>
@@ -156,7 +159,7 @@ $('scan').onclick=async function(){var ids=CVS.filter(function(c){return SEL[c.i
  $('res').innerHTML=pairs.length?table(pairs,true):'<span class="muted">Bu aralıkta eşleşme yok. Alt sınırı düşürmeyi dene.</span>';$('scan').disabled=false;window.scrollTo({top:$('res').offsetTop-80,behavior:'smooth'})};
 
 // LinkedIn satirlari
-function lkrow(){var d=document.createElement('div');d.className='row';d.style.marginTop='6px';d.innerHTML='<input class="lki" placeholder="https://www.linkedin.com/in/..." style="flex:1;min-width:240px">';$('lk').appendChild(d);return d}
+function lkrow(){var d=document.createElement('div');d.className='row';d.style.marginTop='6px';d.innerHTML='<input class="lki" placeholder="https://www.linkedin.com/in/..." style="flex:1;min-width:0">';$('lk').appendChild(d);return d}
 $('lkadd').onclick=function(){lkrow().firstChild.focus()};
 $('lkgo').onclick=async function(){var ins=[].slice.call(document.querySelectorAll('.lki')),urls=[];
  ins.forEach(function(i){i.value.split(/[\s,;]+/).forEach(function(u){if(/linkedin\.com\/in\//i.test(u))urls.push(u)})});
@@ -165,8 +168,7 @@ $('lkgo').onclick=async function(){var ins=[].slice.call(document.querySelectorA
  for(var i=0;i<urls.length;i++){$('lkm').textContent=(i+1)+'/'+urls.length+' okunuyor… (profil başına ~20-40 sn)';
   try{var j=await call({url:urls[i]},'admin-link');if(j.ok){ok++;SEL[j.id]=true}else bad.push(urls[i]+' ('+({duplicate:'zaten kayıtlı',profile_empty:'profil okunamadı / gizli',bad_url:'geçersiz link'}[j.error]||j.error||'hata')+')')}catch(e){bad.push(urls[i]+' (bağlantı)')}}
  $('lkm').textContent=ok+' profil eklendi ve seçildi.'+(bad.length?' Eklenemeyen: '+bad.join('; '):'');
- $('lk').innerHTML='';lkrow();$('lkgo').disabled=false;load()};
-lkrow();
+ $('lk').innerHTML='';document.querySelector('.lki').value='';$('lkgo').disabled=false;load()};
 
 function rd(f){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(String(r.result).split(',')[1])};r.onerror=no;r.readAsDataURL(f)})}
 async function up(files){files=[].slice.call(files);var ok=0,bad=[];$('ub').classList.remove('hide');
