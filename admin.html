@@ -45,7 +45,7 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
     <input id="q" placeholder="Ara: ad, başlık, beceri, not…" style="width:260px">
     <select id="fs"><option value="">Tümü</option><option value="admin">Yüklenen CV</option><option value="linkedin">LinkedIn</option><option value="portal">Portal adayı</option></select>
     <select id="so"><option value="new">En yeni</option><option value="name">Ada göre</option><option value="yrs">Deneyim</option></select></div>
-   <div class="row" style="margin:10px 0 4px"><label><input type="checkbox" id="sa"> Listelenenlerin tümünü seç</label><span class="muted" id="sel"></span><div class="sp"></div><button class="sec" id="sc0">Seçimi temizle</button></div>
+   <div class="row" style="margin:10px 0 4px"><label><input type="checkbox" id="sa"> Listelenenlerin tümünü seç</label><span class="muted" id="sel"></span><div class="sp"></div><button class="sec" id="rx" title="Seçili CV dosyalarını yapay zekayla yeniden okur (beceriler yenilenir, notlar ve ad korunur)">Seçilenleri yeniden oku</button><button class="sec" id="sc0">Seçimi temizle</button></div>
    <div id="list"></div><div class="row" style="margin-top:8px"><button class="sec hide" id="more">Daha fazla göster</button></div>
   </div>
  </div>
@@ -119,6 +119,12 @@ function draw(){var n=CVS.filter(function(c){return kind(c)==='admin'}).length,l
 $('q').oninput=function(){PG=40;draw()};$('fs').onchange=$('so').onchange=function(){PG=40;draw()};
 $('more').onclick=function(){PG+=40;draw()};
 $('sa').onchange=function(){var on=this.checked;view().forEach(function(c){SEL[c.id]=on});draw()};
+$('rx').onclick=async function(){var a=CVS.filter(function(c){return SEL[c.id]&&kind(c)==='admin'});
+ if(!a.length){$('sel').textContent='Yeniden okumak için yüklenmiş CV dosyalarından seç (LinkedIn/portal desteklenmez).';return}
+ if(!confirm(a.length+' CV yeniden okunacak. Becerilerde elle yaptığın düzeltmeler sıfırlanır. Devam?'))return;
+ $('rx').disabled=true;var ok=0;for(var i=0;i<a.length;i++){$('sel').textContent='Okunuyor '+(i+1)+'/'+a.length+': '+(a[i].full_name||a[i].file_name);
+  try{var j=await call({action:'reextract',id:a[i].id});if(j.ok)ok++}catch(e){}}
+ $('rx').disabled=false;await load();$('sel').textContent=ok+'/'+a.length+' CV yenilendi.'};
 $('sc0').onclick=function(){SEL={};draw()};
 function byId(i){return CVS.filter(function(c){return c.id===i})[0]}
 $('list').onchange=function(e){var t=e.target;if(t.getAttribute&&t.getAttribute('data-a')==='chk'){SEL[t.getAttribute('data-i')]=t.checked;var v=view();$('sel').textContent=nsel()+' seçili · '+v.length+' listelenen';$('sa').checked=v.every(function(c){return SEL[c.id]})}};
