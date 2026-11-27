@@ -112,7 +112,10 @@ $('e_ok').onclick=function(){var y=$('e_y').value.trim();call({action:'update',i
 // ---- Arama: aday x ilan eşleşmeleri, ilana göre gruplu ----
 function rng(){var p=$('fit').value.split('-');return {min:+p[0],max:+p[1]}}
 function scc(s){return s>=75?'h':s>=60?'m':'l'}
-async function matches(){var r=rng(),fk=r.min+'-'+r.max,todo=CVS.filter(function(c){return !(MC[fk]&&MC[fk][c.id])}),run=RUN,done=0;MC[fk]=MC[fk]||{};
+async function matches(){var r=rng(),fk=r.min+'-'+r.max,run=RUN,done=0;MC[fk]=MC[fk]||{};
+ if(fk==='75-100'&&!Object.keys(MC[fk]).length){try{$('sm').textContent='Gece önbelleği okunuyor…';var c=await call({action:'cache'});if(c.states&&!c.states.length){$('sm').textContent='İlk önbellek hazırlanıyor…';await call({action:'refresh'});c=await call({action:'cache'})}
+  if(c.states){var by={};(c.rows||[]).forEach(function(x){(by[x.candidate_id]=by[x.candidate_id]||[]).push(x.job)});c.states.forEach(function(id){MC[fk][id]={jobs:(by[id]||[]).sort(function(a,b){return b.score-a.score}),total:c.total_jobs}})}}catch(e){}}
+ var todo=CVS.filter(function(c){return !(MC[fk]&&MC[fk][c.id])});
  var q=todo.slice();async function w(){while(q.length&&run===RUN){var c=q.shift();try{var j=await call({action:'match',id:c.id,min:r.min,max:r.max});MC[fk][c.id]=j.jobs?{jobs:j.jobs.slice(0,20),total:j.total_jobs}:{jobs:[],total:0,err:1}}catch(e){MC[fk][c.id]={jobs:[],total:0,err:1}}done++;$('sm').textContent='Taranıyor '+done+'/'+todo.length+'…'}}
  await Promise.all([w(),w(),w()]);return run===RUN?MC[fk]:null}
 async function search(){var run=++RUN;if(!CVS.length){$('res').innerHTML='<span class="muted">Henüz aday yok.</span>';$('sm').textContent='';return}
@@ -169,7 +172,8 @@ $('addgo').onclick=async function(){var files=QF.slice(),urls=urlsIn(),jurl=jobI
  $('ubi').style.width='100%';$('am').textContent=[(ok?ok+' kayıt eklendi.':'')].concat(msg).join(' ')+(bad.length?' Eklenemeyen: '+bad.join('; '):'');
  QF=files.filter(function(f){return bad.some(function(b){return b.indexOf(f.name)===0})});qdraw();$('li').value='';if(!jobKeep){$('ji').value='';$('jt').value='';$('jt').classList.add('hide')}cnt();$('addgo').disabled=false;
  if(showJob){$('q').value=showJob.title;$('fit').value='25-100'}
- MC={};await load()};
+ MC={};if(showJob)try{await call({action:'refresh'})}catch(e){}
+ await load()};
 $('pick').onclick=function(){$('fi').click()};$('fi').onchange=function(){if(this.files.length)qadd(this.files);this.value=''};
 
 // ---- Klasörden ekle (tarayıcı klasör erişimi; yalnız Chrome/Edge): eksik CV'leri kuyruğa alır ----
