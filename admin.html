@@ -21,6 +21,10 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
 .fb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.fb input,.fb select{padding:6px 8px;font-size:13px}.fchip{display:inline-block;background:#e8ecf3;border-radius:20px;padding:2px 6px 2px 10px;margin:2px 4px 2px 0;font-size:12px}.fchip b{cursor:pointer;margin-left:4px;color:#667085}
 .ib{background:none;border:0;padding:3px 6px;font-size:16px;color:inherit;cursor:pointer}.qf{display:inline-block;background:#eef2fa;border-radius:20px;padding:2px 6px 2px 10px;margin:2px 4px 2px 0;font-size:12px}.qf b{cursor:pointer;margin-left:4px;color:#667085}
 .jg{border:1px solid #e3e6ec;border-radius:10px;margin:0 0 12px;overflow:hidden}.jh{background:#f5f7fb;padding:10px 12px}.cr{padding:10px 12px;border-top:1px solid #eef0f4}.cr .top{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}.ok{color:#17613a}.no{color:#9a3b00}.ai{margin-top:8px;background:#f8f9fc;border-radius:8px;padding:8px 10px;font-size:13px}
+.cc{display:inline-block;border-radius:20px;padding:2px 10px;margin:2px 6px 2px 0;font-size:12px;cursor:pointer;border:1px solid #e3e6ec;background:#f5f7fb}.cc.s-ok{background:#e0f3e6;color:#17613a;border-color:#bfe3cb}.cc.s-part{background:#fff3d6;color:#7a5200;border-color:#f0dca6}.cc.s-unk{background:#e8ecf3;color:#3b4560;border-color:#cfd5df}.cc.s-no{background:#fde7e5;color:#b3261e;border-color:#f1c2be}
+.cd{font-size:13px;margin-top:4px;line-height:1.5;padding-left:8px;border-left:3px solid #cfd5df}.cd.s-ok{border-color:#17613a}.cd.s-part{border-color:#9a6a00}.cd.s-no{border-color:#b3261e}
+.stb{display:inline-block;font-size:11px;border-radius:5px;padding:1px 7px;font-weight:600}.b-hazir{background:#17613a;color:#fff}.b-kismen{background:#fff3d6;color:#7a5200}.b-dogrulanmali{background:#e8ecf3;color:#3b4560}.b-elendi{background:#fde7e5;color:#b3261e}
+dialog .rg label{display:inline-block;margin-right:12px;color:inherit}dialog .rg input{width:auto}
 </style></head><body><div class="w">
 
 <div id="login" class="card" style="max-width:420px;margin:60px auto">
@@ -46,12 +50,13 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
     <input id="ji" placeholder="İlan linki (LinkedIn, freelancermap, firma sayfası…)" style="width:100%;margin-top:8px">
     <textarea id="jt" class="hide" rows="4" placeholder="İlan sayfası okunamadı: ilan metnini buraya yapıştır, sonra tekrar Ekle'ye bas" style="width:100%;margin-top:8px"></textarea></div>
   </div>
-  <div class="row" style="margin-top:12px"><button id="addgo" style="padding:10px 22px">Ekle</button><div class="bar hide sp" id="ub"><i id="ubi"></i></div><span class="muted" id="am"></span></div>
+  <div class="row" style="margin-top:12px"><button id="addgo" style="padding:10px 22px">Ekle</button><div class="bar hide sp" id="ub"><i id="ubi"></i></div><button class="sec" id="rxall" title="Derinlik, dil seviyesi ve çalışma hakkı bilgisi için yüklü CV'leri yeniden okur (CV başına birkaç kuruş)">Tüm CV'leri yeniden oku</button><span class="muted" id="am"></span></div>
  </div>
 
  <div class="card"><h2>Aday / İlan ara</h2>
   <div class="fb"><input id="q" placeholder="Aday adı, başlık, beceri veya ilan başlığı / şirket…" style="flex:1;min-width:220px">
-   <select id="fit"><option value="25-50">Uyum 25–50</option><option value="50-75">Uyum 50–75</option><option value="75-100" selected>Uyum 75–100</option><option value="25-100">Uyum hepsi (25–100)</option></select></div>
+   <select id="st" title="Üç kritere (Teknik, Konum, Dil) göre durum"><option value="hazir" selected>Hazır (3/3 uygun)</option><option value="dogrulanmali">Doğrulanmalı (bilinmeyen var)</option><option value="kismen">Kısmen</option><option value="elendi">Elendi (uygun değil)</option><option value="tumu">Tümü (elenmeyenler)</option></select>
+   <select id="emp" title="Yalnız süzgeç; iş türü belli olmayanlar her iki seçimde de görünür"><option value="any">Tüm iş türleri</option><option value="contract">Sözleşmeli</option><option value="permanent">Kadrolu</option></select></div>
   <div class="muted" id="sm" style="margin-top:6px"></div>
  </div>
 
@@ -61,7 +66,9 @@ dialog{border:0;border-radius:12px;padding:20px;max-width:520px;width:92%}dialog
 
 <dialog id="dlg"><h2>CV bilgilerini düzenle</h2>
  <label>Ad soyad</label><input id="e_n"><label>Başlık</label><input id="e_h"><label>Deneyim (yıl)</label><input id="e_y" type="number" min="0" max="60">
- <label>Ülke</label><input id="e_c"><label>Diller (virgülle: tr,en,de)</label><input id="e_l"><label>Beceriler (virgülle)</label><textarea id="e_s" rows="3"></textarea><label>Öncelik (1 en yüksek, boş = yok)</label><input id="e_o" type="number" min="1">
+ <label>Ülke</label><input id="e_c"><label>Diller (örn: tr:native, en:fluent, de:basic — seviye: basic, working, fluent, native)</label><input id="e_l">
+ <label>Çalışma hakkı (başka ülkede vatandaşlık/izin)</label><div class="rg"><select id="e_w"><option value="">Bilinmiyor</option><option value="yes">Var</option><option value="no">Yok</option></select> <input id="e_wc" placeholder="Ülke kodları: DE, NL, GB" style="width:60%"></div>
+ <label>Yerleşmek üzere taşınmaya açık mı?</label><div class="rg"><select id="e_r"><option value="">Bilinmiyor</option><option value="yes">Evet</option><option value="no">Hayır</option></select> <span id="e_rr"><label><input type="checkbox" value="eu"> Avrupa</label><label><input type="checkbox" value="na"> Kuzey Amerika</label><label><input type="checkbox" value="gulf"> Körfez/Orta Doğu</label><label><input type="checkbox" value="other"> Diğer</label></span></div><label>Beceriler (virgülle)</label><textarea id="e_s" rows="3"></textarea><label>Öncelik (1 en yüksek, boş = yok)</label><input id="e_o" type="number" min="1">
  <div class="row" style="margin-top:14px"><button id="e_ok">Kaydet</button><button class="sec" id="e_no">Vazgeç</button><div class="sp"></div><button class="sec" id="e_rx" title="CV dosyasını yapay zekayla yeniden okur; beceriler yenilenir">CV'yi yeniden oku</button><button class="red" id="e_del">Sil</button></div></dialog>
 </div>
 <script>
@@ -93,56 +100,75 @@ function start(){call({action:'ping'}).then(function(j){
  $('who').textContent=j.email;show(true);load().then(function(){folderSync(false)})}).catch(function(){save(null);show(false)})}
 
 function chips(a){return (a||[]).slice(0,12).map(function(s){return '<span class="chip">'+esc(s)+'</span>'}).join('')}
-var MC={},RC={},AN={},HO={},GRP=null,RUN=0,PAGE=1,NC=[],PS=20;
+var CACHE=null,RC={},AN={},HO={},GRP=null,RUN=0,PAGE=1,NC=[],PS=20;
 var CN={TR:'Türkiye',DE:'Almanya',GB:'Birleşik Krallık',FR:'Fransa',CH:'İsviçre',NL:'Hollanda',AT:'Avusturya',BE:'Belçika',ES:'İspanya',IT:'İtalya',PL:'Polonya',IE:'İrlanda',SE:'İsveç',DK:'Danimarka',NO:'Norveç',FI:'Finlandiya',PT:'Portekiz',LU:'Lüksemburg',CZ:'Çekya',US:'ABD',AE:'BAE',SA:'Suudi Arabistan',QA:'Katar',CA:'Kanada'};
 function kind(c){return c.src==='portal'?'portal':(/^https?:\/\//.test(c.file_name||'')?'linkedin':'admin')}
 function byId(i){return CVS.filter(function(c){return c.id===i})[0]}
-function load(){return call({action:'list'}).then(function(j){CVS=j.cvs||[];MC={};return search()})}
+function load(){return call({action:'list'}).then(function(j){CVS=j.cvs||[];CACHE=null;return search()})}
 
 function icons(c){var k=kind(c);return '<button class="ib" title="'+(k==='linkedin'?'LinkedIn profili':'CV\'yi aç')+'" data-a="cv" data-i="'+esc(c.id)+'">📄</button>'+(k!=='portal'?'<button class="ib" title="Düzenle" data-a="edit" data-i="'+esc(c.id)+'">✎</button>':'')}
 function candAct(b){var i=b.getAttribute('data-i'),a=b.getAttribute('data-a'),c=byId(i);if(!c)return;
  if(a==='cv'&&kind(c)==='linkedin'){window.open(c.file_name,'_blank','noopener');return}
  if(a==='cv'){var w=window.open('','_blank');call({action:'cvlink',id:i}).then(function(j){if(j.url&&w)w.location=/\.docx?$/i.test(c.file_name||'')?'https://view.officeapps.live.com/op/view.aspx?src='+encodeURIComponent(j.url):j.url;else if(w){w.close();alert('CV dosyası bulunamadı.')}})}
- if(a==='edit'){$('e_n').value=c.full_name||'';$('e_h').value=c.headline||'';$('e_y').value=c.years_experience==null?'':c.years_experience;$('e_c').value=c.country||'';$('e_l').value=(c.langs||[]).join(',');$('e_s').value=(c.skills||[]).join(', ');$('e_o').value=c.priority||'';$('dlg').setAttribute('data-i',i);$('dlg').showModal()}}
+ if(a==='edit'){$('e_n').value=c.full_name||'';$('e_h').value=c.headline||'';$('e_y').value=c.years_experience==null?'':c.years_experience;$('e_c').value=c.country||'';$('e_l').value=(c.langv||[]).map(function(x){return x.l+(x.lvl?':'+x.lvl:'')}).join(', ');var rt=c.rights||{},rl=c.reloc||{};$('e_w').value=rt.has===true?'yes':rt.has===false?'no':'';$('e_wc').value=(rt.countries||[]).join(', ');$('e_r').value=rl.open===true?'yes':rl.open===false?'no':'';[].forEach.call($('e_rr').querySelectorAll('input'),function(i){i.checked=(rl.regions||[]).indexOf(i.value)>-1});$('e_s').value=(c.skills||[]).join(', ');$('e_o').value=c.priority||'';$('dlg').setAttribute('data-i',i);$('dlg').showModal()}}
 $('e_no').onclick=function(){$('dlg').close()};
 $('e_del').onclick=function(){var i=$('dlg').getAttribute('data-i'),c=byId(i);if(c&&confirm((c.full_name||c.file_name)+' silinsin mi? Dosya da kalıcı silinir.'))call({action:'delete',id:i}).then(function(){$('dlg').close();load()})};
 $('e_rx').onclick=async function(){var i=$('dlg').getAttribute('data-i'),c=byId(i);if(!c||kind(c)!=='admin'){alert('Yalnız yüklenmiş CV dosyaları yeniden okunur.');return}if(!confirm('CV yeniden okunacak; becerilerde elle yaptığın düzeltmeler sıfırlanır. Devam?'))return;$('e_rx').disabled=true;$('e_rx').textContent='Okunuyor…';try{var j=await call({action:'reextract',id:i});if(!j.ok)alert('Okunamadı: '+(j.error||j._s))}catch(e){}$('e_rx').disabled=false;$('e_rx').textContent="CV'yi yeniden oku";$('dlg').close();load()};
-$('e_ok').onclick=function(){var y=$('e_y').value.trim();call({action:'update',id:$('dlg').getAttribute('data-i'),fields:{full_name:$('e_n').value,headline:$('e_h').value,years_experience:y===''?null:parseInt(y,10),country:$('e_c').value,langs:$('e_l').value.split(','),skills:$('e_s').value.split(','),priority:$('e_o').value.trim()===''?null:parseInt($('e_o').value,10)}}).then(function(){$('dlg').close();load()})};
+$('e_ok').onclick=function(){var y=$('e_y').value.trim();call({action:'update',id:$('dlg').getAttribute('data-i'),fields:{full_name:$('e_n').value,headline:$('e_h').value,years_experience:y===''?null:parseInt(y,10),country:$('e_c').value,langs:$('e_l').value.split(',').map(function(x){var p=x.trim().split(':');return p[0]?{l:p[0].trim(),lvl:(p[1]||'').trim()||undefined}:null}).filter(Boolean),work_rights:{has:$('e_w').value===''?null:$('e_w').value==='yes',countries:$('e_wc').value.split(/[,\s]+/).filter(Boolean)},reloc:{open:$('e_r').value===''?null:$('e_r').value==='yes',regions:[].filter.call($('e_rr').querySelectorAll('input'),function(i){return i.checked}).map(function(i){return i.value})},skills:$('e_s').value.split(','),priority:$('e_o').value.trim()===''?null:parseInt($('e_o').value,10)}}).then(function(){$('dlg').close();load()})};
 
-// ---- Arama: aday x ilan eşleşmeleri, ilana göre gruplu ----
-function rng(){var p=$('fit').value.split('-');return {min:+p[0],max:+p[1]}}
-function scc(s){return s>=75?'h':s>=60?'m':'l'}
-async function matches(){var r=rng(),fk=r.min+'-'+r.max,run=RUN,done=0;MC[fk]=MC[fk]||{};
- if(fk==='75-100'&&!Object.keys(MC[fk]).length){try{$('sm').textContent='Gece önbelleği okunuyor…';var c=await call({action:'cache'});if(c.states&&!c.states.length){$('sm').textContent='İlk önbellek hazırlanıyor…';await call({action:'refresh'});c=await call({action:'cache'})}
-  if(c.states){var by={};(c.rows||[]).forEach(function(x){(by[x.candidate_id]=by[x.candidate_id]||[]).push(x.job)});c.states.forEach(function(id){MC[fk][id]={jobs:(by[id]||[]).sort(function(a,b){return b.score-a.score}),total:c.total_jobs}})}}catch(e){}}
- var todo=CVS.filter(function(c){return !(MC[fk]&&MC[fk][c.id])});
- var q=todo.slice();async function w(){while(q.length&&run===RUN){var c=q.shift();try{var j=await call({action:'match',id:c.id,min:r.min,max:r.max});MC[fk][c.id]=j.jobs?{jobs:j.jobs.slice(0,20),total:j.total_jobs}:{jobs:[],total:0,err:1}}catch(e){MC[fk][c.id]={jobs:[],total:0,err:1}}done++;$('sm').textContent='Taranıyor '+done+'/'+todo.length+'…'}}
- await Promise.all([w(),w(),w()]);return run===RUN?MC[fk]:null}
+// ---- Arama: aday x ilan eşleşmeleri (Teknik / Konum / Dil), ilana göre gruplu ----
+var CR=[['tech','Teknik'],['loc','Konum'],['lang','Dil']],ST={hazir:'Hazır',dogrulanmali:'Doğrulanmalı',kismen:'Kısmen',elendi:'Elendi'},EMPL={contract:'Sözleşmeli',permanent:'Kadrolu'},OPEN={};
+var CACHE=null;
+function stc(s){return {ok:'✓',part:'~',unk:'?',no:'✗'}[s]||'•'}
+function stn(s){return {ok:'Uygun',part:'Kısmen',unk:'Bilinmiyor',no:'Uygun değil'}[s]||''}
+async function loadCache(run){
+ $('sm').textContent='Önbellek okunuyor…';var c=await call({action:'cache'});
+ for(var t=0;t<8&&c.states&&c.states.length<CVS.length&&run===RUN;t++){$('sm').textContent='Eşleşmeler hesaplanıyor ('+c.states.length+'/'+CVS.length+')…';var r=await call({action:'refresh'});if(!r.ok||!r.remaining)break;c=await call({action:'cache'})}
+ if(c.states&&c.states.length<CVS.length&&run===RUN){await call({action:'refresh'});c=await call({action:'cache'})}
+ var by={};(c.rows||[]).forEach(function(x){(by[x.candidate_id]=by[x.candidate_id]||[]).push(x.job)});
+ CACHE={by:by,total:c.total_jobs||0,states:c.states||[]};return CACHE}
+async function liveElendi(list,run){var out={},q=list.slice(),done=0;
+ async function w(){while(q.length&&run===RUN){var c=q.shift();try{var j=await call({action:'match',id:c.id,status:'elendi'});out[c.id]=j.jobs||[]}catch(e){out[c.id]=[]}done++;$('sm').textContent='Elenenler taranıyor '+done+'/'+(done+q.length)+'…'}}
+ await Promise.all([w(),w(),w()]);return out}
 async function search(){var run=++RUN;if(!CVS.length){$('res').innerHTML='<span class="muted">Henüz aday yok.</span>';$('sm').textContent='';return}
- var fk=rng().min+'-'+rng().max;$('sm').textContent='Taranıyor…';var M=await matches();if(!M||run!==RUN)return;$('sm').textContent='';
- var q=$('q').value.trim().toLowerCase(),G={},n=0,tot=0;
- CVS.forEach(function(c){var m=M[c.id];if(!m)return;tot=m.total||tot;var cm=!q||[c.full_name,c.headline,c.country,(c.skills||[]).join(' ')].join(' ').toLowerCase().indexOf(q)>-1;
-  m.jobs.forEach(function(j){var jm=!q||[j.title,j.company,j.location,CN[String(j.country||'').toUpperCase()]||j.country].join(' ').toLowerCase().indexOf(q)>-1;if(!cm&&!jm)return;var g=G[j.id]||(G[j.id]={job:j,items:[]});g.items.push({cv:c,m:j});n++})});
- GRP=G;PAGE=1;NC=q?CVS.filter(function(c){return [c.full_name,c.headline,c.country,(c.skills||[]).join(' ')].join(' ').toLowerCase().indexOf(q)>-1}).map(function(c){return {cv:c,n:(M[c.id]?M[c.id].jobs.length:0)}}):[];var r=rng();$('rt').textContent='— '+Object.keys(G).length+' ilan, '+n+' eşleşme (uyum '+r.min+'–'+r.max+'), taranan ilan: '+tot;
- renderRes();
- var pairs=[];Object.keys(G).forEach(function(k){G[k].items.forEach(function(it){if(!RC[it.cv.id+'|'+it.m.id])pairs.push({cv_id:it.cv.id,job_id:it.m.id})})});
- if(pairs.length){try{for(var s=0;s<pairs.length&&run===RUN;s+=250){var rr=await call({action:'reasons',pairs:pairs.slice(s,s+250)},'admin-ai');if(rr.ok)for(var k in rr.reasons)RC[k]=rr.reasons[k]}}catch(e){}if(run===RUN)renderRes()}}
-var qt=null;$('q').oninput=function(){clearTimeout(qt);qt=setTimeout(search,300)};$('fit').onchange=search;
-function renderRes(){var gs=Object.keys(GRP||{}).map(function(k){return GRP[k]});gs.forEach(function(g){g.items.sort(function(a,b){return b.m.score-a.m.score});g.top=g.items[0].m.score});gs.sort(function(a,b){return b.top-a.top||b.items.length-a.items.length});
+ var st=$('st').value,emp=$('emp').value,q=$('q').value.trim().toLowerCase();
+ var candOk=function(c){return !q||[c.full_name,c.headline,c.country,(c.skills||[]).join(' ')].join(' ').toLowerCase().indexOf(q)>-1};
+ var jobsBy={};
+ try{
+  if(st==='elendi'){var lst=CVS.filter(candOk);if(!lst.length)lst=CVS;jobsBy=await liveElendi(lst,run);if(run!==RUN)return}
+  else{if(!CACHE||CACHE.states.length<CVS.length){await loadCache(run);if(run!==RUN)return}jobsBy=CACHE.by}
+ }catch(e){$('sm').textContent='Okunamadı, tekrar dene.';return}
+ $('sm').textContent='';
+ var G={},n=0,NCs=[];
+ CVS.forEach(function(c){var arr=jobsBy[c.id]||[],cm=candOk(c),cnt=0;
+  arr.forEach(function(j){if(st!=='elendi'&&st!=='tumu'&&j.status!==st)return;if(st==='tumu'&&j.status==='elendi')return;
+   if(emp!=='any'&&j.emp!==emp&&j.emp!=='unk')return;
+   var jm=!q||[j.title,j.company,j.location,CN[String(j.country||'').toUpperCase()]||j.country].join(' ').toLowerCase().indexOf(q)>-1;if(!cm&&!jm)return;
+   var g=G[j.id]||(G[j.id]={job:j,items:[]});g.items.push({cv:c,m:j});n++;cnt++});
+  if(q&&cm)NCs.push({cv:c,n:cnt})});
+ GRP=G;PAGE=1;NC=NCs;$('rt').textContent='— '+Object.keys(G).length+' ilan, '+n+' eşleşme ('+({tumu:'elenmeyenlerin hepsi'}[st]||ST[st])+')'+(CACHE&&st!=='elendi'?', taranan ilan: '+CACHE.total:'');
+ renderRes()}
+var qt=null;$('q').oninput=function(){clearTimeout(qt);qt=setTimeout(search,300)};$('st').onchange=$('emp').onchange=search;
+function renderRes(){var gs=Object.keys(GRP||{}).map(function(k){return GRP[k]});gs.forEach(function(g){g.items.sort(function(a,b){return (b.m.ts||0)-(a.m.ts||0)});g.top=g.items[0].m.ts||0});gs.sort(function(a,b){return b.top-a.top||b.items.length-a.items.length});
  var pages=[],cur=[],cnt=0;gs.forEach(function(g){cur.push(g);cnt+=g.items.length;if(cnt>=PS){pages.push(cur);cur=[];cnt=0}});if(cur.length)pages.push(cur);
  if(PAGE>pages.length)PAGE=Math.max(1,pages.length);
  var nav=pages.length>1?'<div class="row" style="margin:10px 0;gap:6px">'+'<button class="sec" data-pg="'+(PAGE-1)+'"'+(PAGE<2?' disabled':'')+'>‹</button>'+pages.map(function(p,i){return '<button class="'+(i+1===PAGE?'':'sec')+'" data-pg="'+(i+1)+'">'+(i+1)+'</button>'}).join('')+'<button class="sec" data-pg="'+(PAGE+1)+'"'+(PAGE>=pages.length?' disabled':'')+'>›</button><span class="muted">Sayfa '+PAGE+'/'+pages.length+' · sayfa başına ~'+PS+' eşleşme</span></div>':'';
  var who=NC.length?'<div style="margin-bottom:10px">'+NC.map(function(x){return '<span class="chip" style="padding:3px 10px">'+esc(x.cv.full_name||x.cv.file_name)+(x.cv.priority?' ★'+x.cv.priority:'')+' '+icons(x.cv)+'<span class="muted"> '+x.n+' eşleşme</span></span>'}).join(' ')+'</div>':'';
- var body=(pages[PAGE-1]||[]).map(function(g){var j=g.job;return '<div class="jg"><div class="jh"><b>'+esc(j.title)+' - '+esc(CN[String(j.country||'').toUpperCase()]||j.country||j.location||'?')+'</b> <span class="muted">'+esc([j.company,j.location,j.source].filter(Boolean).join(' · '))+'</span>'+(j.apply_url?' <a href="'+esc(j.apply_url)+'" target="_blank" rel="noopener">İlana git</a>':'')+' <span class="muted">· '+g.items.length+' aday</span></div>'+g.items.map(function(it){return cand(it)}).join('')+'</div>'}).join('');
- $('res').innerHTML=who+(gs.length?nav+body+nav:'<span class="muted">Bu filtrede eşleşme yok. Uyum aralığını değiştir veya aramayı temizle.</span>')}
-function cand(it){var k=it.cv.id+'|'+it.m.id,r=RC[k],a=AN[k],h=HO[k];
- var IC={ok:'<span class="ok">✓</span>',no:'<span class="no">✗</span>',mid:'<span style="color:#9a6a00">~</span>',na:'<span class="muted">•</span>'};
- var why=r&&r.lines?r.lines.map(function(x){return '<div>'+IC[x.s]+' <b>'+esc(x.l)+':</b> '+esc(x.t)+'</div>'}).join(''):'<span class="muted">…</span>';
+ var body=(pages[PAGE-1]||[]).map(function(g){var j=g.job;return '<div class="jg"><div class="jh"><b>'+esc(j.title)+' - '+esc(CN[String(j.country||'').toUpperCase()]||j.country||j.location||'?')+'</b> <span class="muted">'+esc([j.company,j.location,j.source,EMPL[j.emp]].filter(Boolean).join(' · '))+'</span>'+(j.apply_url?' <a href="'+esc(j.apply_url)+'" target="_blank" rel="noopener">İlana git</a>':'')+' <span class="muted">· '+g.items.length+' aday</span></div>'+g.items.map(function(it){return cand(it)}).join('')+'</div>'}).join('');
+ $('res').innerHTML=who+(gs.length?nav+body+nav:'<span class="muted">Bu filtrede eşleşme yok. Durumu veya iş türünü değiştir ya da aramayı temizle.</span>')}
+function openQs(m){var o=[];CR.forEach(function(c){var x=m[c[0]];if(x&&x.s==='unk')o.push({k:c[1],t:x.t,who:x.who||''})});return o}
+function cand(it){var k=it.cv.id+'|'+it.m.id,a=AN[k],h=HO[k],m=it.m;
+ var chips=CR.map(function(c){var x=m[c[0]]||{s:'unk',t:''},id=k+'|'+c[0],isOpen=OPEN[id]!=null?OPEN[id]:(x.s==='no'||x.s==='unk');
+  return '<span class="cc s-'+x.s+'" data-c="'+esc(id)+'" title="'+esc(x.t)+'">'+c[1]+' '+stc(x.s)+' '+stn(x.s)+'</span>'}).join('');
+ var det=CR.map(function(c){var x=m[c[0]]||{s:'unk',t:''},id=k+'|'+c[0],isOpen=OPEN[id]!=null?OPEN[id]:(x.s==='no'||x.s==='unk');
+  return isOpen&&x.t?'<div class="cd s-'+x.s+'"><b>'+c[1]+':</b> '+esc(x.t)+'</div>':''}).join('');
  var ai=a?(a.error?'<div class="ai err">'+esc(a.error)+'</div>':'<div class="ai"><b>'+({iletisim:'İletişime geç',belki:'Belki',gec:'Geç'}[a.verdict]||a.verdict||'…')+' · '+(a.score==null?'':a.score)+'</b> — '+esc(a.summary)+(a.strengths.length?'<br><span class="ok">+ '+esc(a.strengths.join(' · '))+'</span>':'')+(a.gaps.length?'<br><span class="no">− '+esc(a.gaps.join(' · '))+'</span>':'')+(a.risks.length?'<br>⚠ '+esc(a.risks.join(' · ')):'')+(a.pitch?'<br><i>'+esc(a.pitch)+'</i>':'')+'</div>'):'';
- return '<div class="cr"><div class="top"><span style="min-width:46px"><span class="sc '+scc(it.m.score)+'">'+it.m.score+'</span>'+(r&&r.lines?'<div class="muted" title="Konum · Dil · Teknik">'+r.ok+'/3 ✓</div>':'')+'</span><div style="flex:1;min-width:200px"><b>'+esc(it.cv.full_name||it.cv.file_name)+'</b> '+icons(it.cv)+' <span class="muted">'+esc(it.cv.headline||'')+'</span><div style="font-size:13px;margin-top:4px;line-height:1.6">'+why+'</div></div><div style="white-space:nowrap"><button class="sec" data-a="ai" data-k="'+esc(k)+'"'+(a&&!a.error?' disabled':'')+'>'+(a&&a.busy?'Analiz…':'Yapay zekayla analiz')+'</button> <button data-a="ho" data-k="'+esc(k)+'"'+(h?' disabled':'')+'>'+(h==='ok'?'Süreçte ✓':h==='busy'?'…':'Sürece al')+'</button></div></div>'+ai+'</div>'}
-$('res').onclick=function(e){var b=e.target.closest('button');if(!b)return;if(b.getAttribute('data-pg')){PAGE=+b.getAttribute('data-pg');renderRes();window.scrollTo({top:$('res').offsetTop-80});return}if(b.getAttribute('data-i')){candAct(b);return}var k=b.getAttribute('data-k'),a=b.getAttribute('data-a'),p=k.split('|');
+ return '<div class="cr"><div class="top"><div style="flex:1;min-width:200px"><span class="stb b-'+m.status+'">'+(ST[m.status]||m.status)+'</span> <b>'+esc(it.cv.full_name||it.cv.file_name)+'</b> '+icons(it.cv)+' <span class="muted">'+esc(it.cv.headline||'')+'</span><div style="margin-top:6px">'+chips+'</div>'+det+'</div><div style="white-space:nowrap"><button class="sec" data-a="ai" data-k="'+esc(k)+'"'+(a&&!a.error?' disabled':'')+'>'+(a&&a.busy?'Analiz…':'Yapay zekayla analiz')+'</button> <button data-a="ho" data-k="'+esc(k)+'"'+(h?' disabled':'')+'>'+(h==='ok'?'Süreçte ✓':h==='busy'?'…':'Sürece al')+'</button></div></div>'+ai+'</div>'}
+$('res').onclick=function(e){var cc=e.target.closest('.cc');if(cc){var id=cc.getAttribute('data-c'),pp=id.split('|'),cur=OPEN[id];
+  var g=GRP&&GRP[pp[1]],it=g&&g.items.filter(function(x){return x.cv.id===pp[0]})[0],x=it&&it.m[pp[2]],def=x&&(x.s==='no'||x.s==='unk');OPEN[id]=cur==null?!def:!cur;renderRes();return}
+ var b=e.target.closest('button');if(!b)return;if(b.getAttribute('data-pg')){PAGE=+b.getAttribute('data-pg');renderRes();window.scrollTo({top:$('res').offsetTop-80});return}if(b.getAttribute('data-i')){candAct(b);return}var k=b.getAttribute('data-k'),a=b.getAttribute('data-a'),p=k.split('|');
  if(a==='ai'){AN[k]={busy:1,summary:'',strengths:[],gaps:[],risks:[]};renderRes();call({action:'analyze',cv_id:p[0],job_id:p[1]},'admin-ai').then(function(j){AN[k]=j.ok?j.analysis:{error:'Analiz başarısız: '+(j.error||j._s)+(j.detail?' '+j.detail:''),strengths:[],gaps:[],risks:[]};renderRes()}).catch(function(){AN[k]={error:'Bağlantı hatası',strengths:[],gaps:[],risks:[]};renderRes()})}
- if(a==='ho'){HO[k]='busy';renderRes();var an=AN[k]&&!AN[k].error&&!AN[k].busy?AN[k]:null;call({action:'handoff',cv_id:p[0],job_id:p[1],analysis:an},'admin-ai').then(function(j){HO[k]=j.ok?'ok':null;if(!j.ok)alert('Sürece alınamadı: '+(j.error||j._s));renderRes()}).catch(function(){HO[k]=null;renderRes()})}};
+ if(a==='ho'){var g2=GRP&&GRP[p[1]],it2=g2&&g2.items.filter(function(x){return x.cv.id===p[0]})[0],mm=it2?it2.m:null;HO[k]='busy';renderRes();var an=AN[k]&&!AN[k].error&&!AN[k].busy?AN[k]:null;call({action:'handoff',cv_id:p[0],job_id:p[1],analysis:an,open:mm?openQs(mm):[],status:mm?mm.status:''},'admin-ai').then(function(j){HO[k]=j.ok?'ok':null;if(!j.ok)alert('Sürece alınamadı: '+(j.error||j._s));renderRes()}).catch(function(){HO[k]=null;renderRes()})}};
 
 // ---- Ekle: dosya kuyruğu + LinkedIn profili + ilan linki ----
 var QF=[];
@@ -171,9 +197,13 @@ $('addgo').onclick=async function(){var files=QF.slice(),urls=urlsIn(),jurl=jobI
    else bad.push('ilan ('+(j3.error||'hata')+(j3.detail?': '+j3.detail:'')+')')}catch(e){bad.push('ilan (bağlantı)')}}
  $('ubi').style.width='100%';$('am').textContent=[(ok?ok+' kayıt eklendi.':'')].concat(msg).join(' ')+(bad.length?' Eklenemeyen: '+bad.join('; '):'');
  QF=files.filter(function(f){return bad.some(function(b){return b.indexOf(f.name)===0})});qdraw();$('li').value='';if(!jobKeep){$('ji').value='';$('jt').value='';$('jt').classList.add('hide')}cnt();$('addgo').disabled=false;
- if(showJob){$('q').value=showJob.title;$('fit').value='25-100'}
- MC={};if(showJob)try{await call({action:'refresh'})}catch(e){}
+ if(showJob){$('q').value=showJob.title;$('st').value='tumu'}
+ CACHE=null;if(showJob)try{await call({action:'refresh'})}catch(e){}
  await load()};
+$('rxall').onclick=async function(){var l=CVS.filter(function(c){return kind(c)==='admin'&&!c.has_depth});if(!l.length){$('am').textContent='Yeniden okunacak CV yok (hepsi güncel).';return}
+ if(!confirm(l.length+' CV yeniden okunacak (yaklaşık '+(l.length*0.03).toFixed(2)+' USD). Beceri düzeltmelerin sıfırlanır; dil seviyesi/çalışma hakkında elle girdiklerin korunur. Devam?'))return;
+ $('rxall').disabled=true;var q=l.slice(),d=0,bad=0;async function w(){while(q.length){var c=q.shift();try{var j=await call({action:'reextract',id:c.id});if(!j.ok)bad++}catch(e){bad++}d++;$('am').textContent='Okunuyor '+d+'/'+l.length+(bad?' (hata: '+bad+')':'')}}
+ await Promise.all([w(),w()]);$('am').textContent=l.length-bad+' CV yenilendi'+(bad?', '+bad+' hata':'')+'.';$('rxall').disabled=false;await load()};
 $('pick').onclick=function(){$('fi').click()};$('fi').onchange=function(){if(this.files.length)qadd(this.files);this.value=''};
 
 // ---- Klasörden ekle (tarayıcı klasör erişimi; yalnız Chrome/Edge): eksik CV'leri kuyruğa alır ----
