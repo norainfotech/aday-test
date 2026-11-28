@@ -43,14 +43,14 @@ dialog .rg label{display:inline-block;margin-right:12px;color:inherit}dialog .rg
  <div class="card"><h2>Ekle</h2>
   <div class="g2">
    <div class="bx">
-    <div class="row"><button class="sec" id="pick">Dosya seç</button><button class="sec" id="fsync" title="Klasörü seç; listede olmayan CV'ler sıraya eklenir. Klasör hatırlanır.">Klasörden ekle</button><input id="fi" type="file" multiple accept=".pdf,.docx" class="hide"></div>
-    <div id="qf" style="margin-top:6px"></div><div class="msg muted" id="fsm"></div></div>
+    <div class="row"><button class="sec" id="pick">Dosya seç</button><button class="sec" id="fsync" title="Klasörü seç; listede olmayan CV'ler sıraya eklenir. Klasör hatırlanır.">Klasörden ekle <span id="fsi"></span></button><input id="fi" type="file" multiple accept=".pdf,.docx" class="hide"></div>
+    <div id="qf" style="margin-top:6px"></div><div class="msg muted" id="fsm" style="margin-top:0"></div></div>
    <div class="bx">
     <input class="lki" id="li" placeholder="LinkedIn profil linki (birden fazlaysa araya boşluk koy)" style="width:100%">
-    <input id="ji" placeholder="İlan linki (LinkedIn, freelancermap, firma sayfası…)" style="width:100%;margin-top:8px">
+    <div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="ji" placeholder="İlan linki (LinkedIn, freelancermap, firma sayfası…)" style="flex:1;min-width:0"><button id="addgo" style="padding:10px 22px">Ekle</button><button class="sec" id="rxall" title="Derinlik, dil seviyesi ve çalışma hakkı bilgisi için yüklü CV'leri yeniden okur (CV başına birkaç kuruş)">Tüm CV'leri yeniden oku</button></div><div class="bar hide" id="ub" style="margin-top:6px"><i id="ubi"></i></div><span class="muted" id="am"></span>
     <textarea id="jt" class="hide" rows="4" placeholder="İlan sayfası okunamadı: ilan metnini buraya yapıştır, sonra tekrar Ekle'ye bas" style="width:100%;margin-top:8px"></textarea></div>
   </div>
-  <div class="row" style="margin-top:12px"><button id="addgo" style="padding:10px 22px">Ekle</button><div class="bar hide sp" id="ub"><i id="ubi"></i></div><button class="sec" id="rxall" title="Derinlik, dil seviyesi ve çalışma hakkı bilgisi için yüklü CV'leri yeniden okur (CV başına birkaç kuruş)">Tüm CV'leri yeniden oku</button><span class="muted" id="am"></span></div>
+  
  </div>
 
  <div class="card"><h2>Aday / İlan ara</h2>
@@ -158,7 +158,7 @@ function renderRes(){var gs=Object.keys(GRP||{}).map(function(k){return GRP[k]})
  var body=(pages[PAGE-1]||[]).map(function(g){var j=g.job;return '<div class="jg"><div class="jh"><b>'+esc(j.title)+' - '+esc(CN[String(j.country||'').toUpperCase()]||j.country||j.location||'?')+'</b> <span class="muted">'+esc([j.company,j.location,j.source,EMPL[j.emp]].filter(Boolean).join(' · '))+'</span>'+(j.apply_url?' <a href="'+esc(j.apply_url)+'" target="_blank" rel="noopener">İlana git</a>':'')+' <span class="muted">· '+g.items.length+' aday</span>'+selBar(g)+'</div>'+g.items.map(function(it){return cand(it)}).join('')+'</div>'}).join('');
  $('res').innerHTML=who+(gs.length?body+nav:'<span class="muted">Bu filtrede eşleşme yok. Durumu veya iş türünü değiştir ya da aramayı temizle.</span>')}
 function selBar(g){var n=g.items.filter(function(it){return SEL[it.cv.id+'|'+g.job.id]&&HO[it.cv.id+'|'+g.job.id]!=='ok'}).length,free=g.items.filter(function(it){return HO[it.cv.id+'|'+g.job.id]!=='ok'}).length;
- if(!free)return '';return ' <span style="float:right;white-space:nowrap"><button class="sec" data-gs="'+esc(g.job.id)+'">'+(n===free?'Seçimi kaldır':'Hepsini seç')+'</button> <button data-gh="'+esc(g.job.id)+'"'+(n?'':' disabled')+'>Seçilenleri sürece al ('+n+')</button></span>'}
+ if(!free)return '';return '<div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px"><button class="sec" data-gs="'+esc(g.job.id)+'">'+(n===free?'Seçimi kaldır':'Hepsini seç')+'</button><button data-gh="'+esc(g.job.id)+'"'+(n?'':' disabled')+'>Seçilenleri sürece al ('+n+')</button></div>'}
 function doHO(jobId,cvIds){var g=GRP&&GRP[jobId];if(!g||!cvIds.length)return;
  var items=cvIds.map(function(id){var it=g.items.filter(function(x){return x.cv.id===id})[0],k=id+'|'+jobId,an=AN[k]&&!AN[k].error&&!AN[k].busy?AN[k]:null;HO[k]='busy';return {cv_id:id,analysis:an,open:it?openQs(it.m):[]}});renderRes();
  return call({action:'handoff',job_id:jobId,items:items},'admin-ai').then(function(j){items.forEach(function(x){var k=x.cv_id+'|'+jobId;HO[k]=j.ok?'ok':null;if(j.ok){HOP[k]=j.process_no;delete SEL[k]}});if(!j.ok)alert('Sürece alınamadı: '+(j.error||j._s));renderRes()}).catch(function(){items.forEach(function(x){HO[x.cv_id+'|'+jobId]=null});renderRes()})}
@@ -220,20 +220,21 @@ function idb(){return new Promise(function(ok,no){var r=indexedDB.open('nora-adm
 function idbGet(k){return idb().then(function(d){return new Promise(function(ok){var q=d.transaction('h').objectStore('h').get(k);q.onsuccess=function(){ok(q.result)};q.onerror=function(){ok(null)}})})}
 function idbSet(k,v){return idb().then(function(d){return new Promise(function(ok){var t=d.transaction('h','readwrite');t.objectStore('h').put(v,k);t.oncomplete=ok})})}
 var SYNCING=false;
+function fst(sym,tip,col){var e=$('fsi');e.textContent=sym;e.style.color=col||'';e.parentNode.title=tip||''}
 async function folderSync(manual){
  if(SYNCING||!window.showDirectoryPicker)return;SYNCING=true;var m=$('fsm');
  try{
   var h=null;try{h=await idbGet('dir')}catch(e){}
-  if(h){var p=await h.queryPermission({mode:'read'});if(p!=='granted'){if(!manual){m.textContent='Klasör izni bekliyor: "Klasörden ekle"ye bas.';return}p=await h.requestPermission({mode:'read'});if(p!=='granted')h=null}}
+  if(h){var p=await h.queryPermission({mode:'read'});if(p!=='granted'){if(!manual){fst('🔒','Klasör izni bekliyor: "Klasörden ekle"ye bas','#d97706');return}p=await h.requestPermission({mode:'read'});if(p!=='granted')h=null}}
   else if(!manual)return;
   if(!h){h=await window.showDirectoryPicker({mode:'read'});await idbSet('dir',h)}
-  m.textContent='Klasör taranıyor…';
+  fst('⟳','Klasör taranıyor…');m.textContent='';
   var have={};CVS.forEach(function(c){if(c.file_name)have[c.file_name.toLowerCase()]=1});
   var todo=[],skip=[];
   for await(var e of h.values()){if(e.kind!=='file')continue;if(have[e.name.toLowerCase()])continue;if(/\.(pdf|docx)$/i.test(e.name))todo.push(e);else skip.push(e.name)}
-  if(!todo.length){m.textContent='Klasördeki tüm CV\'ler listede ('+h.name+').'+(skip.length?' Atlanan: '+skip.join(', '):'');return}
+  if(!todo.length){fst('✓','Klasördeki tüm CV\'ler listede ('+h.name+')'+(skip.length?'. Atlanan: '+skip.join(', '):''),'#1a8f4c');return}
   var files=[];for(var i=0;i<todo.length;i++)files.push(await todo[i].getFile());
-  qadd(files);m.textContent=files.length+' yeni CV sıraya alındı ('+h.name+'): "Ekle"ye bas.'+(skip.length?' Atlanan: '+skip.join(', '):'');
+  qadd(files);fst('+'+files.length,files.length+' yeni CV sıraya alındı ('+h.name+'): "Ekle"ye bas','#d97706');
  }catch(e){if(e&&e.name!=='AbortError')m.textContent='Klasör okunamadı: '+(e.message||e)}
  finally{SYNCING=false}}
 $('fsync').onclick=function(){if(!window.showDirectoryPicker){$('fsm').textContent='Bu tarayıcı klasör erişimini desteklemiyor; Chrome veya Edge kullan.';return}folderSync(true)};
