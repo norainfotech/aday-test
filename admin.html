@@ -221,8 +221,8 @@ $('addgo').onclick=async function(){var files=QF.slice(),urls=urlsIn(),jurl=jobI
  if(showJob){$('q').value=showJob.title;$('st').value='tumu'}
  CACHE=null;if(showJob)try{await call({action:'refresh'})}catch(e){}
  await load()};
-$('rxall').onclick=async function(){var l=CVS.filter(function(c){return kind(c)==='admin'&&!c.has_depth});if(!l.length){$('am').textContent='Yeniden okunacak CV yok (hepsi güncel).';return}
- if(!confirm(l.length+' CV yeniden okunacak (yaklaşık '+(l.length*0.03).toFixed(2)+' USD). Beceri düzeltmelerin sıfırlanır; dil seviyesi/çalışma hakkında elle girdiklerin korunur. Devam?'))return;
+$('rxall').onclick=async function(){var l=CVS.filter(function(c){return kind(c)==='admin'&&!/^https?:/i.test(c.file_name||'')&&(!c.has_depth||!c.brief)});if(!l.length){$('am').textContent='Yeniden okunacak CV yok (hepsi güncel).';return}
+ if(!confirm(l.length+' CV yeniden okunacak (yaklaşık '+(l.length*0.03).toFixed(2)+' USD). Künye ve beceri listesi yeniden çıkarılır, beceri düzeltmelerin sıfırlanır; dil seviyesi/çalışma hakkında elle girdiklerin korunur. Devam?'))return;
  $('rxall').disabled=true;var q=l.slice(),d=0,bad=0;async function w(){while(q.length){var c=q.shift();try{var j=await call({action:'reextract',id:c.id});if(!j.ok)bad++}catch(e){bad++}d++;$('am').textContent='Okunuyor '+d+'/'+l.length+(bad?' (hata: '+bad+')':'')}}
  await Promise.all([w(),w()]);$('am').textContent=l.length-bad+' CV yenilendi'+(bad?', '+bad+' hata':'')+'.';$('rxall').disabled=false;await load()};
 $('pick').onclick=function(){$('fi').click()};$('fi').onchange=function(){if(this.files.length)qadd(this.files);this.value=''};
